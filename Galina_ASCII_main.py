@@ -21,7 +21,7 @@ def launch() -> None:
 
     map_width = 80
     map_height = 50
-    max_rooms = 12
+    max_rooms = 20
     room_min_size = 5
     room_max_size = 17
 

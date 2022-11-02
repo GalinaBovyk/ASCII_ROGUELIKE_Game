@@ -55,10 +55,10 @@ class RectangularRoom:
 
     def intersects(self, other: RectangularRoom) -> bool:
         return(
-            self.x1 <= other.x2
-            and self.x2 >= other.x1
-            and self.y1 <= other.y2
-            and self.y2 >= other.y1
+            self.x1-1 <= other.x2+2
+            and self.x2+2 >= other.x1-1
+            and self.y1-1 <= other.y2+2
+            and self.y2+2 >= other.y1-1
         )
 
 def tunnel_between(
@@ -101,6 +101,7 @@ def generate_dungeon(
             continue
         dungeon.tiles[new_room.outer] = tile_types.wall
         dungeon.tiles[new_room.inner] = tile_types.floor
+        types_used = []
 
 
         if len(rooms) == 0:
@@ -109,34 +110,58 @@ def generate_dungeon(
         elif len(rooms) == 1:
             for x, y in tunnel_between (rooms[-1].side, new_room.side):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    types_used.append(tile_types.floor)
                     continue
+                    
                 elif dungeon.tiles[x,y] == tile_types.wall:
-                    dungeon.tiles[x,y] = tile_types.door
+                    if types_used[-1] == tile_types.wall:
+                        break
+                    else:
+                        dungeon.tiles[x,y] = tile_types.door
+                        types_used.append(tile_types.wall)
+                    
 
                 else:
                     dungeon.tiles[x,y] = tile_types.tunnel
+                    types_used.append(tile_types.tunnel)
         else:
             for x, y in tunnel_between (rooms[-1].side, new_room.side):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    types_used.append(tile_types.floor)
                     continue
                 elif dungeon.tiles[x,y] == tile_types.wall:
-                    dungeon.tiles[x,y] = tile_types.door
+                    if types_used[-1] == tile_types.wall:
+                        break
+                    else:
+                        dungeon.tiles[x,y] = tile_types.door
+                        types_used.append(tile_types.wall)
+##                    
+##                    dungeon.tiles[x,y] = tile_types.door
+##                    break
+##                    
 
                 else:
                     dungeon.tiles[x,y] = tile_types.tunnel
+                    types_used.append(tile_types.tunnel)
                     
-            for x, y in tunnel_between (rooms[-2].side, new_room.side):
+            for x, y in tunnel_between (random.choice(rooms).side, new_room.side):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    types_used.append(tile_types.floor)
                     continue
                 elif dungeon.tiles[x,y] == tile_types.wall:
-                    dungeon.tiles[x,y] = tile_types.door
+                    if types_used[-1] == tile_types.wall:
+                        break
+                    else:
+                        dungeon.tiles[x,y] = tile_types.door
+                        types_used.append(tile_types.wall)
 
                 else:
                     dungeon.tiles[x,y] = tile_types.tunnel
-                
-                
+                    types_used.append(tile_types.tunnel)
 
-        dungeon.tiles[new_room.inner] = tile_types.floor
+                
+ 
+        #dungeon.tiles[new_room.inner] = tile_types.floor
 
         rooms.append(new_room)
 
