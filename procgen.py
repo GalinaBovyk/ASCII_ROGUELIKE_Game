@@ -5,7 +5,9 @@
 from __future__ import annotations
 import random
 from typing import Iterator, List, Tuple, TYPE_CHECKING
+import tcod
 
+import entity_factories
 from game_map import GameMap
 import tile_types
 
@@ -40,12 +42,12 @@ class RectangularRoom:
 
     @property
     def side(self) -> Tuple[int,int]:
-        list_x = [self.x1 +1, self.x2 -1]
+        list_x = [self.x1+1 , self.x2 -1]
         list_y = [self.y1 +1, self.y2-1]
         side_x_hard = int(random.choice(list_x))
         side_y_hard = int(random.choice(list_y))
-        side_x_soft = int(random.randint(self.x1 + 2, self.x2 -2))
-        side_y_soft = int(random.randint(self.y1 + 2, self.y2 -2))
+        side_x_soft = int(random.randint(self.x1+1 , self.x2-1 ))
+        side_y_soft = int(random.randint(self.y1+1 , self.y2-1 ))
         list_choice =[side_x_hard, side_x_soft]
         final_choice = random.choice(list_choice)
         if final_choice == side_x_hard:
@@ -60,6 +62,28 @@ class RectangularRoom:
             and self.y1-1 <= other.y2+2
             and self.y2+2 >= other.y1-1
         )
+
+def place_entities(
+    room: RectangularRoom, dungeon: GameMap, maximum_monsters: int,
+) -> None:
+    number_of_monsters = random.randint(0, maximum_monsters)
+
+    for i in range(number_of_monsters):
+        x = random.randint(room.x1 + 2, room.x2 - 2)
+        y = random.randint(room.y1 + 2, room.y2 - 2)
+
+        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+            if random.random() < 0.5:
+                entity_factories.small_evil_snake.spawn(dungeon, x, y)# small evil snake
+            elif 0.5 < random.random() < 0.8:
+                entity_factories.big_evil_snake.spawn(dungeon, x, y) # big evil snake
+            elif  0.8 <= random.random() < 0.95:
+                entity_factories.worm.spawn(dungeon, x, y) # worm
+            elif 0.95 <= random.random():
+                entity_factories.golden_duck.spawn(dungeon, x, y) # duck
+            else:
+                entity_factories.duck.spawn(dungeon, x, y) # golden duck
+                       
 
 def tunnel_between(
     start: Tuple[int,int], end: Tuple[int,int]
@@ -82,10 +106,11 @@ def generate_dungeon(
     room_max_size: int,
     map_width: int,
     map_height: int,
+    max_monsters_per_room: int,
     player: Entity,
 ) -> GameMap:
 
-    dungeon = GameMap(map_width, map_height)
+    dungeon = GameMap(map_width, map_height, entities=[player])
     rooms: List[RectangularRoom] = []
 
     for r in range(max_rooms):
@@ -135,10 +160,7 @@ def generate_dungeon(
                     else:
                         dungeon.tiles[x,y] = tile_types.door
                         types_used.append(tile_types.wall)
-##                    
-##                    dungeon.tiles[x,y] = tile_types.door
-##                    break
-##                    
+            
 
                 else:
                     dungeon.tiles[x,y] = tile_types.tunnel
@@ -160,8 +182,7 @@ def generate_dungeon(
                     types_used.append(tile_types.tunnel)
 
                 
- 
-        #dungeon.tiles[new_room.inner] = tile_types.floor
+        place_entities(new_room, dungeon, max_monsters_per_room)
 
         rooms.append(new_room)
 
