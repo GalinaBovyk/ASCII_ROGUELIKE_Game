@@ -2,6 +2,7 @@
 #
 #
 ##
+import random
 import copy
 import tcod 
 import os
@@ -18,7 +19,7 @@ from procgen import generate_dungeon
 ##
 def launch() -> None:
     screen_width = 80
-    screen_height = 50
+    screen_height = 55
 
     map_width = 80
     map_height = 50
@@ -31,22 +32,27 @@ def launch() -> None:
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32,8, tcod.tileset.CHARMAP_TCOD
         )
-    event_handler = EventHandler()
+    
 
     player = copy.deepcopy(entity_factories.player)
+    big_evil_snake = copy.deepcopy(entity_factories.big_evil_snake)
+    duck = copy.deepcopy(entity_factories.duck)
+    small_evil_snake = copy.deepcopy(entity_factories.small_evil_snake)
+    worm = copy.deepcopy(entity_factories.worm)
+    engine = Engine(player=player,enemy_ss=small_evil_snake, enemy_bs=big_evil_snake, enemy_w=worm, duck=duck)
 
-    game_map = generate_dungeon(
+    engine.game_map = generate_dungeon(
         max_rooms=max_rooms,
         room_min_size=room_min_size,
         room_max_size=room_max_size,
         map_width=map_width,
         map_height=map_height,
         max_monsters_per_room=max_monsters_per_room,
-        player=player
-)
+        engine=engine,
+    )
+    engine.update_fov()
+    
 
-
-    engine = Engine(event_handler=event_handler, game_map=game_map, player=player)
 
     with tcod.context.new_terminal(
         screen_width,
@@ -58,29 +64,14 @@ def launch() -> None:
         root_console = tcod.Console(screen_width, screen_height, order="F")
         while True:
 
-##            root_console.print(x=player.x, y=player.y, string=player.char, fg=player.color)
-            engine.render(console=root_console, context=context)
 
-##            context.present(root_console)
-            events = tcod.event.wait()
-            
-            engine.handle_events(events)
-##            root_console.clear()
-##
-##            for event in tcod.event.wait():
-##                action = event_handler.dispatch(event)
-##                if action is None:
-##                    continue
-##                if isinstance(action, MovementAction):
-##
-##                    player.move(dx=action.dx, dy=action.dy)
-##                elif isinstance(action, EscapeAction):
-##                    raise SystemExit()
-##                
+            engine.render(console=root_console, context=context)
+            engine.event_handler.handle_events()
 
 
 
 
 
 if __name__ == "__main__":
+    random.seed(123)
     launch()

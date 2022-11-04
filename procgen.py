@@ -12,7 +12,7 @@ from game_map import GameMap
 import tile_types
 
 if TYPE_CHECKING:
-    from entity import Entity
+    from engine import Engine
 
 
 
@@ -107,10 +107,10 @@ def generate_dungeon(
     map_width: int,
     map_height: int,
     max_monsters_per_room: int,
-    player: Entity,
+    engine: Engine,
 ) -> GameMap:
-
-    dungeon = GameMap(map_width, map_height, entities=[player])
+    player = engine.player
+    dungeon = GameMap(engine, map_width, map_height, entities=[player])
     rooms: List[RectangularRoom] = []
 
     for r in range(max_rooms):
@@ -130,10 +130,10 @@ def generate_dungeon(
 
 
         if len(rooms) == 0:
-            player.x, player.y = new_room.center
+            player.place(*new_room.center, dungeon)
 
         elif len(rooms) == 1:
-            for x, y in tunnel_between (rooms[-1].side, new_room.side):
+            for x, y in tunnel_between (rooms[-1].center, new_room.center):
                 if dungeon.tiles[x,y] == tile_types.floor:
                     types_used.append(tile_types.floor)
                     continue
@@ -150,7 +150,7 @@ def generate_dungeon(
                     dungeon.tiles[x,y] = tile_types.tunnel
                     types_used.append(tile_types.tunnel)
         else:
-            for x, y in tunnel_between (rooms[-1].side, new_room.side):
+            for x, y in tunnel_between (rooms[-1].center, new_room.center):
                 if dungeon.tiles[x,y] == tile_types.floor:
                     types_used.append(tile_types.floor)
                     continue
