@@ -1,0 +1,8 @@
+#
+#
+#
+#
+#
+
+class Impossible(Exception):
+    """meep"""

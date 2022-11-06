@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from typing import Optional, Tuple, TYPE_CHECKING
 
+import color
+import exceptions
+
 if TYPE_CHECKING:
     from engine import Engine
-    from entity import Actor, Entity
+    from entity import Actor, Entity, Item
 
     
 
@@ -22,7 +25,53 @@ class Action:
     def perform(self) -> None:
         raise NotImplementedError()
 
+class PickupAction(Action):
+    def __init__(self, entity: Actor):
+        super().__init__(entity)
 
+    def perform(self) -> None:
+        actor_location_x = self.entity.x
+        actor_location_y = self.entity.y
+        inventory = self.entity.inventory
+        #print("trying to pick up")
+
+        for item in self.engine.game_map.items:
+            if actor_location_x ==item.x and actor_location_y == item.y:
+                if len(inventory.items)>= inventory.capacity:
+                    raise exceptions.Impossible("Sadly not everyone gets a place in your pocket.")
+
+                self.engine.game_map.entities.remove(item)
+                item.parent = self.entity.inventory
+                inventory.items.append(item)
+
+                self.engine.message_log.add_message(f"You picked up a {item.name}. Neat!")
+                return
+        print("Oopsie poopsie")
+        #raise exceptions.Impossible("You stare at the empty floor... there is nothing to pick up there.")
+
+
+class ItemAction(Action):
+    def __init__(
+        self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None
+    ):
+        super().__intit__(entity)
+        self.item = item
+        if not terget_xy:
+            target_xy = entity.x, entity.y
+        self.target_xy = target_xy
+
+    @property
+    def target_actor(self) -> Optional[Actor]:
+        return self.engine.game_map.gat_actor_at_location(*self.target_xy)
+
+    def perform(self) -> None:
+        print("trying to try to eat")
+        self.item.consumable.activate(self)
+
+
+class DropItem(ItemAction):
+    def perform(self) ->None:
+        self.entity.inventory.drop(self.item)
 
 
 class EscapeAction(Action):
@@ -63,28 +112,38 @@ class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target = self.target_actor
         if not target:
-            return # There is no one to attack
+            raise exceptions.Impossible("You are trying to hit the air... Not gonna work")
         damage = self.entity.fighter.strength - target.fighter.armorclass
 
         attack_desc = F"{self.entity.name.capitalize()} tries to strangle {target.name}"
+        if self.entity is self.engine.player:
+            attack_color = color.player_atk
+        else:
+            attack_color = color.enemy_atk
         if damage > 0:
-            print(f"{attack_desc} and it hurts for {damage} hit points.")
+            self.engine.message_log.add_message(
+                f"{attack_desc} and it hurts for {damage} hit points.", attack_color
+            )
             target.fighter.hp -= damage
         else:
-         print(f"{attack_desc}, but is too weak to deal any damage.")
+         self.engine.message_log.add_message(
+             f"{attack_desc}, but is too weak to deal any damage.", attack_color
+        )
         
 
 class MovementAction(ActionWithDirection):
     def perform(self) -> None:
         dest_x, dest_y = self.dest_xy
 
-
+#You really can not walk trough walls... yet.
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
-            return # Destination is out of bounds :(
+            raise exceptions.Impossible("Trying to walk off the map will do you no good.")
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
-            return # Oh no, there is something in the way.
+#            raise exceptions.Impossible("You really can not walk trough walls... yet.")
+            raise exceptions.Impossible()
+
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
-            return # Oh no, there is an entity in the way!
+            raise exceptions.Impossible("Eyes up! Someone is standing in your way!")
 
         self.entity.move(self.dx, self.dy)
 

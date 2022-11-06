@@ -11,12 +11,12 @@ import numpy as np
 import tcod
 
 from actions import Action, MeleeAction, MovementAction, WaitAction
-from components.base_component import BaseComponent
+
 
 if TYPE_CHECKING:
     from entity import Actor
 
-class BaseAI(Action, BaseComponent):
+class BaseAI(Action):
     entity: Actor
     
     def perform(self) -> None:
@@ -72,22 +72,26 @@ class SnakeEnemy(BaseAI):
         self.path: List[Tuple[int,int]] = []
 
     def perform(self) -> None:
-        target = self.engine.enemy_ss
-        print(f"i cat, my target is {target}")
+        target = self.engine.player
+#        target = self.engine.game_map.entities.GameMap.actors.small_evil_snake
+#        target = self.engine.game_map.actors(small_evil_snake)
+#        target = self.engine.game_map.dungeon.entities.small_evil_snake
+        
+ #       print(f"i cat, my target is {target}")
         
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
         distance = max(abs(dx), abs(dy))
-        print(f"its at {target.x} and {target.y} away")
+        #print(f"its at {target.x} and {target.y} away")
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
-            print(f"{distance}")
+     #       print(f"{distance}")
             if distance <= 1:
-                print("i hunger")
+                #print("i hunger")
                 return MeleeAction(self.entity, dx, dy).perform()
 
             self.path = self.get_path_to(target.x, target.y)
-            print(f"i am gonna slither to {self.path}")
+      #      print(f"i am gonna slither to {self.path}")
 
         if self.path:
             dest_x, dest_y = self.path.pop(0)

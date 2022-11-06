@@ -36,6 +36,7 @@ class RectangularRoom:
     def inner(self) -> Tuple[slice,slice]:
         return slice(self.x1 + 1, self.x2), slice(self.y1 + 1, self.y2)
 
+#maybe try doing console draw frame instead of doing the X tiles?
     @property
     def outer(self) -> Tuple[slice,slice]:
         return slice(self.x1, self.x2+1), slice(self.y1, self.y2 +1)
@@ -64,9 +65,10 @@ class RectangularRoom:
         )
 
 def place_entities(
-    room: RectangularRoom, dungeon: GameMap, maximum_monsters: int,
+    room: RectangularRoom, dungeon: GameMap, maximum_monsters: int, maximum_items: int
 ) -> None:
     number_of_monsters = random.randint(0, maximum_monsters)
+    number_of_items = random.randint(0, maximum_items)
 
     for i in range(number_of_monsters):
         x = random.randint(room.x1 + 2, room.x2 - 2)
@@ -83,6 +85,17 @@ def place_entities(
                 entity_factories.golden_duck.spawn(dungeon, x, y) # duck
             else:
                 entity_factories.duck.spawn(dungeon, x, y) # golden duck
+
+    for i in range(number_of_items):
+        x = random.randint(room.x1 + 2, room.x2 - 2)
+        y = random.randint(room.y1 + 2, room.y2 - 2)
+
+        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+            if random.random() < 0.8:
+                entity_factories.energy_drink.spawn(dungeon, x, y)
+            else:
+                entity_factories.nice_note.spawn(dungeon, x, y)
+            
                        
 
 def tunnel_between(
@@ -107,6 +120,7 @@ def generate_dungeon(
     map_width: int,
     map_height: int,
     max_monsters_per_room: int,
+    max_items_per_room: int,
     engine: Engine,
 ) -> GameMap:
     player = engine.player
@@ -182,7 +196,7 @@ def generate_dungeon(
                     types_used.append(tile_types.tunnel)
 
                 
-        place_entities(new_room, dungeon, max_monsters_per_room)
+        place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room)
 
         rooms.append(new_room)
 
