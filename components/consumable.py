@@ -20,7 +20,6 @@ class Consumable(BaseComponent):
     parent: Item
 
     def get_action(self, consumer: Actor) -> Optional[actions.Action]:
-        print("trying to eat")
         return actions.ItemAction(consumer, self.parent)
 
     def activate(self, action: actions.ItemAction) -> None:
@@ -32,11 +31,10 @@ class HealingConsumable(Consumable):
 
     def activate(self, action: actions.ItemAction) -> None:
         consumer = action.entity
-        print("really trying to eat")
         amount_recovered = consumer.fighter.heal(self.amount)
 
         if amount_recovered> 0:
-            self.engine.message_log.addmessage(
+            self.engine.message_log.add_message(
                 f"You shove the {self.parent.name} down your throat and feel {amount_recovered} HP healthier!",
                 color.health_recovered,
             )

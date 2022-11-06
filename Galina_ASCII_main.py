@@ -80,9 +80,9 @@ def launch() -> None:
                     context.convert_event(event)
                     engine.event_handler.handle_events(event)
             except Exception:
-                pass
-##                traceback.print_exc()
-##                engine.message_log.add_message(traceback.format_exc(), color.error)
+#                pass
+                traceback.print_exc()
+                engine.message_log.add_message(traceback.format_exc(), color.error)
 
 
 

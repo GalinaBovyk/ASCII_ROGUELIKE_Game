@@ -46,17 +46,17 @@ class PickupAction(Action):
 
                 self.engine.message_log.add_message(f"You picked up a {item.name}. Neat!")
                 return
-        print("Oopsie poopsie")
-        #raise exceptions.Impossible("You stare at the empty floor... there is nothing to pick up there.")
+
+        raise exceptions.Impossible("You stare at the empty floor... there is nothing to pick up there.")
 
 
 class ItemAction(Action):
     def __init__(
         self, entity: Actor, item: Item, target_xy: Optional[Tuple[int, int]] = None
     ):
-        super().__intit__(entity)
+        super().__init__(entity)
         self.item = item
-        if not terget_xy:
+        if not target_xy:
             target_xy = entity.x, entity.y
         self.target_xy = target_xy
 
@@ -139,8 +139,8 @@ class MovementAction(ActionWithDirection):
         if not self.engine.game_map.in_bounds(dest_x, dest_y):
             raise exceptions.Impossible("Trying to walk off the map will do you no good.")
         if not self.engine.game_map.tiles["walkable"][dest_x, dest_y]:
-#            raise exceptions.Impossible("You really can not walk trough walls... yet.")
-            raise exceptions.Impossible()
+            raise exceptions.Impossible("You really can not walk trough walls... yet.")
+#            raise exceptions.Impossible()
 
         if self.engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
             raise exceptions.Impossible("Eyes up! Someone is standing in your way!")
