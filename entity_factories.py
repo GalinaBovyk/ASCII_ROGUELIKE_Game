@@ -4,9 +4,10 @@
 #
 
 from components.ai import HostileEnemy, SnakeEnemy, WormEnemy, ClosedDoor
-from components.consumable import HealingConsumable
+from components import consumable
 from components.fighter import Fighter
 from components.inventory import Inventory
+from components.level import Level
 from entity import Actor, Item
 
 
@@ -18,6 +19,7 @@ player = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=30, armorclass=2, strength=5),
     inventory=Inventory(capacity=26),
+    level=Level(level_up_base=200),
 )
 
 big_evil_snake = Actor(
@@ -28,6 +30,7 @@ big_evil_snake = Actor(
     ai_cls=SnakeEnemy,
     fighter=Fighter(hp=16, armorclass=1, strength=3),
     inventory=Inventory(capacity=0),
+    level=Level(xp_given=100),
 )
 
 small_evil_snake = Actor(
@@ -35,8 +38,9 @@ small_evil_snake = Actor(
     color=(112, 219, 175),
     name="Small EVIL Snake",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=10, armorclass=0, strength=2),
+    fighter=Fighter(hp=10, armorclass=0, strength=3),
     inventory=Inventory(capacity=0),
+    level=Level(xp_given=300),
 )
 
 worm = Actor(
@@ -46,6 +50,7 @@ worm = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=5, armorclass=0, strength=0),
     inventory=Inventory(capacity=0),
+    level=Level(xp_given=10),
 )
 
 duck = Actor(
@@ -56,6 +61,7 @@ duck = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=10, armorclass=0, strength=1),
     inventory=Inventory(capacity=0),
+    level=Level(xp_given=20),
 )
 
 golden_duck = Actor(
@@ -66,6 +72,7 @@ golden_duck = Actor(
     ai_cls=HostileEnemy,
     fighter=Fighter(hp=20, armorclass=2, strength=3),
     inventory=Inventory(capacity=1),
+    level=Level(xp_given=200),
 )
 
 closed_door = Actor(
@@ -75,21 +82,41 @@ closed_door = Actor(
     ai_cls=ClosedDoor,
     fighter=Fighter(hp=2, armorclass=0, strength=0),
     inventory=Inventory(capacity=0),
+    level=Level(xp_given=0),
 )
 
 energy_drink = Item(
     char="!",
     color=(148, 252, 50),
     name="Energy Drink",
-    consumable=HealingConsumable(amount=4)
+    consumable=consumable.HealingConsumable(amount=4)
 )
 
 nice_note = Item(
     char="&",
     color=(255,230,210),
-    name="Nice Note from Your friends",
-    consumable=HealingConsumable(amount=1)
+    name="Nice Note from Your Friends",
+    consumable=consumable.HealingConsumable(amount=1)
+)
+
+deadline_list = Item(
+    char="?",
+    color=(216, 191, 219),
+    name= "List of Deadlines",
+    consumable=consumable.FatigueDamageConsumable(damage=10, maximum_range=5),
+)
+
+complicated_math_equation = Item(
+    char="?",
+    color=(197, 191, 219),
+    name ="Complicated Math Equasions",
+    consumable=consumable.ConfusionConsumable(number_of_turns=10),
 )
     
 
-
+stink_bomb = Item(
+    char="Q",
+    color=(144, 173, 10),
+    name="Stink Bomb",
+    consumable=consumable.StinkBombConsumable(damage=12, radius=3),
+)

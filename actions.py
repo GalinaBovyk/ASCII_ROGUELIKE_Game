@@ -62,10 +62,9 @@ class ItemAction(Action):
 
     @property
     def target_actor(self) -> Optional[Actor]:
-        return self.engine.game_map.gat_actor_at_location(*self.target_xy)
+        return self.engine.game_map.get_actor_at_location(*self.target_xy)
 
     def perform(self) -> None:
-        print("trying to try to eat")
         self.item.consumable.activate(self)
 
 
@@ -74,14 +73,23 @@ class DropItem(ItemAction):
         self.entity.inventory.drop(self.item)
 
 
-class EscapeAction(Action):
-    def perform(self) -> None:
-        raise SystemExit()
+##class EscapeAction(Action):
+##    def perform(self) -> None:
+##        raise SystemExit()
 
 class WaitAction(Action):
     def perform(self) -> None:
         pass
 
+class TakeStairsAction(Action):
+    def perform(self) -> None:
+        if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
+            self.engine.game_world.generate_floor()
+            self.engine.message_log.add_message(
+                "You stumble down the stairs.", color.descend
+            )
+        else:
+            raise exceptions.Impossible("You cannot dig yourself a hole and sit in it.")
 
 class ActionWithDirection(Action):
     def __init__(self, entity: Actor, dx: int, dy: int):

@@ -5,12 +5,13 @@
 
 from __future__ import annotations
 
-from typing import List, Tuple, TYPE_CHECKING
+import random
+from typing import List, Optional, Tuple, TYPE_CHECKING
 
 import numpy as np
 import tcod
 
-from actions import Action, MeleeAction, MovementAction, WaitAction
+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction
 
 
 if TYPE_CHECKING:
@@ -37,6 +38,39 @@ class BaseAI(Action):
         path: List[List[int]] = pathfinder.path_to((dest_x,dest_y))[1:].tolist()
 
         return [(index[0], index[1]) for index in path]
+
+class ConfusedEnemy(BaseAI):
+    def __init__(
+        self, entity: Actor, previous_ai: Optional[BaseAI], turns_remaining: int
+    ):
+        super().__init__(entity)
+
+        self.previous_ai = previous_ai
+        self.turns_remaining = turns_remaining
+
+    def perform(self) -> None:
+        if self.turns_remaining <= 0:
+            self.engine.message_log.add_message(
+                f"The {self.entity.name} snaps out of it's confusion."
+            )
+            self.entity.ai = self.previous_ai
+        else:
+            direction_x, direction_y = random.choice(
+                [
+                    (-1, -1),
+                    (0, -1),
+                    (1, -1),
+                    (-1, 0),
+                    (1, 0),
+                    (-1, 1),
+                    (0, 1),
+                    (1, 1),
+                ]
+            )
+            self.turns_remaining -= 1
+
+            return BumpAction(self.entity, direction_x, direction_y,).perform()
+        
 
 
 # here is where I would create a different type of ai
