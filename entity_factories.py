@@ -4,7 +4,8 @@
 #
 
 from components.ai import HostileEnemy, SnakeEnemy, WormEnemy, ClosedDoor
-from components import consumable
+from components import consumable, equippable
+from components.equipment import Equipment
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
@@ -17,7 +18,8 @@ player = Actor(
     color=(255,255,255),
     name="Player",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=30, armorclass=2, strength=5),
+    equipment=Equipment(),
+    fighter=Fighter(hp=30, base_armorclass=2, base_strength=5),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
@@ -28,7 +30,8 @@ big_evil_snake = Actor(
     name="Big EVIL Snake",
 #    ai_cls=HostileEnemy,
     ai_cls=SnakeEnemy,
-    fighter=Fighter(hp=16, armorclass=1, strength=3),
+    equipment=Equipment(),
+    fighter=Fighter(hp=16, base_armorclass=1, base_strength=3),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )
@@ -38,9 +41,10 @@ small_evil_snake = Actor(
     color=(112, 219, 175),
     name="Small EVIL Snake",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=10, armorclass=0, strength=3),
+    equipment=Equipment(),
+    fighter=Fighter(hp=7, base_armorclass=0, base_strength=3),
     inventory=Inventory(capacity=0),
-    level=Level(xp_given=300),
+    level=Level(xp_given=30),
 )
 
 worm = Actor(
@@ -48,7 +52,8 @@ worm = Actor(
     color=(112, 28, 70),
     name="Worm",
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=5, armorclass=0, strength=0),
+    equipment=Equipment(),
+    fighter=Fighter(hp=5, base_armorclass=0, base_strength=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=10),
 )
@@ -59,7 +64,8 @@ duck = Actor(
     , name="Duck",
     #ai_cls=WormEnemy,
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=10, armorclass=0, strength=1),
+    equipment=Equipment(),
+    fighter=Fighter(hp=10, base_armorclass=0, base_strength=1),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=20),
 )
@@ -70,7 +76,8 @@ golden_duck = Actor(
     name="Golden Duck",
 ##    ai_cls=SnakeEnemy,
     ai_cls=HostileEnemy,
-    fighter=Fighter(hp=20, armorclass=2, strength=3),
+    equipment=Equipment(),
+    fighter=Fighter(hp=20, base_armorclass=2, base_strength=3),
     inventory=Inventory(capacity=1),
     level=Level(xp_given=200),
 )
@@ -80,7 +87,8 @@ closed_door = Actor(
     color=(219, 156, 26),
     name="Closed Door",
     ai_cls=ClosedDoor,
-    fighter=Fighter(hp=2, armorclass=0, strength=0),
+    equipment=Equipment(),
+    fighter=Fighter(hp=2, base_armorclass=0, base_strength=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0),
 )
@@ -119,4 +127,39 @@ stink_bomb = Item(
     color=(144, 173, 10),
     name="Stink Bomb",
     consumable=consumable.StinkBombConsumable(damage=12, radius=3),
+)
+
+computer_mouse = Item(
+    char="o",
+    color=(202, 219, 230),
+    name="Computer Mouse",
+    equippable=equippable.ComputerMouse(),
+)
+
+keyboard = Item(
+    char="/",
+    color=(202, 219, 230),
+    name="Keyboard",
+    equippable=equippable.Keyboard(),
+)
+
+face_mask = Item(
+    char="{",
+    color=(138, 183, 212),
+    name="Face Mask",
+    equippable=equippable.FaceMask(),
+)
+
+hoodie = Item(
+    char="[",
+    color=(191, 179, 172),
+    name="Comfy Hoodie",
+    equippable=equippable.Hoodie(),
+)
+
+the_one_ring = Item(
+    char="=",
+    color=(224, 36, 190),
+    name="The One Ring",
+    equippable=equippable.TheOneRing(),
 )

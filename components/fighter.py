@@ -20,11 +20,11 @@ if TYPE_CHECKING:
 class Fighter(BaseComponent):
     parent: Actor
     
-    def __init__(self, hp: int, armorclass: int, strength: int):
+    def __init__(self, hp: int, base_armorclass: int, base_strength: int):
         self.max_hp = hp
         self._hp = hp
-        self.armorclass = armorclass
-        self.strength = strength
+        self.base_armorclass = base_armorclass
+        self.base_strength = base_strength
 
     @property
     def hp(self) -> int:
@@ -35,6 +35,28 @@ class Fighter(BaseComponent):
         self._hp = max(0, min(value, self.max_hp))
         if self._hp == 0 and self.parent.ai:
             self.die()
+
+    @property
+    def armorclass(self) -> int:
+        return self.base_armorclass + self.armorclass_bonus
+
+    @property
+    def strength(self) -> int:
+        return self.base_strength + self.strength_bonus
+
+    @property
+    def armorclass_bonus(self) -> int:
+        if self.parent.equipment:
+            return self.parent.equipment.armorclass_bonus
+        else:
+            return 0
+
+    @property
+    def strength_bonus(self) -> int:
+        if self.parent.equipment:
+            return self.parent.equipment.strength_bonus
+        else:
+            return 0
 
     def die(self) -> None:
         if self.engine.player is self.parent:

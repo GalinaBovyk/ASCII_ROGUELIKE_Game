@@ -58,6 +58,12 @@ def new_game() -> Engine:
     engine.message_log.add_message(
         "After sitting in Monty working on your Python script you finally passed out on your desk... only to suddenly wake up in a dungeon!", color.welcome_text
     )
+
+    #
+    #
+    # could technically start with equipment but its kinda lame
+    ##
+    
     return engine
 
 def load_game(filename: str) -> Engine:
