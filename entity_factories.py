@@ -19,7 +19,7 @@ player = Actor(
     name="Player",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=30, base_armorclass=2, base_strength=5),
+    fighter=Fighter(hp=30, base_armorclass=5, base_strength=5, base_magic=3),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
@@ -31,7 +31,7 @@ big_evil_snake = Actor(
 #    ai_cls=HostileEnemy,
     ai_cls=SnakeEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=16, base_armorclass=1, base_strength=3),
+    fighter=Fighter(hp=16, base_armorclass=1, base_strength=3, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=100),
 )
@@ -42,7 +42,7 @@ small_evil_snake = Actor(
     name="Small EVIL Snake",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=7, base_armorclass=0, base_strength=3),
+    fighter=Fighter(hp=7, base_armorclass=0, base_strength=3, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=30),
 )
@@ -53,7 +53,7 @@ worm = Actor(
     name="Worm",
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=5, base_armorclass=0, base_strength=0),
+    fighter=Fighter(hp=5, base_armorclass=0, base_strength=0, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=10),
 )
@@ -65,7 +65,7 @@ duck = Actor(
     #ai_cls=WormEnemy,
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=10, base_armorclass=0, base_strength=1),
+    fighter=Fighter(hp=10, base_armorclass=0, base_strength=1, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=20),
 )
@@ -77,7 +77,7 @@ golden_duck = Actor(
 ##    ai_cls=SnakeEnemy,
     ai_cls=HostileEnemy,
     equipment=Equipment(),
-    fighter=Fighter(hp=20, base_armorclass=2, base_strength=3),
+    fighter=Fighter(hp=20, base_armorclass=2, base_strength=3, base_magic=0),
     inventory=Inventory(capacity=1),
     level=Level(xp_given=200),
 )
@@ -88,7 +88,7 @@ closed_door = Actor(
     name="Closed Door",
     ai_cls=ClosedDoor,
     equipment=Equipment(),
-    fighter=Fighter(hp=2, base_armorclass=0, base_strength=0),
+    fighter=Fighter(hp=2, base_armorclass=0, base_strength=0, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0),
 )
@@ -163,3 +163,11 @@ the_one_ring = Item(
     name="The One Ring",
     equippable=equippable.TheOneRing(),
 )
+
+mood_ring = Item(
+    char="=",
+    color=(148, 3, 252),
+    name="Mood Ring",
+    equippable=equippable.MoodRing(),
+)
+

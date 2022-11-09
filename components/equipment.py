@@ -49,6 +49,20 @@ class Equipment(BaseComponent):
             bonus += self.ring.equippable.strength_bonus
         return bonus
 
+    @property
+    def magic_bonus(self) -> int:
+        bonus = 0
+
+        if self.weapon is not None and self.weapon.equippable is not None:
+            bonus += self.weapon.equippable.magic_bonus
+
+        if self.armor is not None and self.armor.equippable is not None:
+            bonus += self.armor.equippable.magic_bonus
+
+        if self.ring is not None and self.ring.equippable is not None:
+            bonus += self.ring.equippable.magic_bonus
+        return bonus
+
     def item_is_equipped(self, item: Item) -> bool:
         return self.weapon == item or self.armor == item or self.ring == item
 

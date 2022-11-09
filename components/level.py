@@ -70,6 +70,11 @@ class Level(BaseComponent):
         self.engine.message_log.add_message("You feel like punching you will be harder.")
         self.increase_level()
 
+    def increase_magic(self, amount: int = 1) -> None:
+        self.parent.fighter.base_magic += amount
+        self.engine.message_log.add_message("You feel magic tingle between your fingers.")
+        self.increase_level()
+
         
 
 

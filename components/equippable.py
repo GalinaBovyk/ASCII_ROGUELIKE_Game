@@ -21,10 +21,12 @@ class Equippable(BaseComponent):
         equipment_type: EquipmentType,
         strength_bonus: int = 0,
         armorclass_bonus: int = 0,
+        magic_bonus: int = 0,
     ):
         self.equipment_type = equipment_type
         self.strength_bonus = strength_bonus
         self.armorclass_bonus = armorclass_bonus
+        self.magic_bonus = magic_bonus
 
 class ComputerMouse(Equippable):
     def __init__(self) -> None:
@@ -46,7 +48,10 @@ class TheOneRing(Equippable):
     def __init__(self) -> None:
         super().__init__(equipment_type=EquipmentType.RING, strength_bonus=10)
         # change rins to int and other shit
-    
+
+class MoodRing(Equippable):
+    def __init__(self) -> None:
+        super().__init__(equipment_type=EquipmentType.RING, magic_bonus=4)
 
     
 

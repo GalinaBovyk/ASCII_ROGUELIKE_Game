@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Optional, Tuple, TYPE_CHECKING
 
 import color
+import random
 import exceptions
 
 if TYPE_CHECKING:
@@ -96,7 +97,7 @@ class WaitAction(Action):
 class TakeStairsAction(Action):
     def perform(self) -> None:
         if (self.entity.x, self.entity.y) == self.engine.game_map.downstairs_location:
-            self.engine.game_world.generate_floor()
+            self.engine.game_world.total_dungeon()
             self.engine.message_log.add_message(
                 "You stumble down the stairs.", color.descend
             )
@@ -133,7 +134,7 @@ class MeleeAction(ActionWithDirection):
         target = self.target_actor
         if not target:
             raise exceptions.Impossible("You are trying to hit the air... Not gonna work")
-        damage = self.entity.fighter.strength - target.fighter.armorclass
+        damage = random.randint(0,5) + self.entity.fighter.strength - target.fighter.armorclass
 
         attack_desc = F"{self.entity.name.capitalize()} tries to strangle {target.name}"
         if self.entity is self.engine.player:

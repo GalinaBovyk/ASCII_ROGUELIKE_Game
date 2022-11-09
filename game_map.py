@@ -105,7 +105,8 @@ class GameWorld:
         max_rooms: int,
         room_min_size: int,
         room_max_size: int,
-        current_floor: int = 0
+        current_floor: int = 0,
+        total_floors: int = 0,
     ):
         self.engine = engine
 
@@ -117,6 +118,15 @@ class GameWorld:
         self.room_min_size = room_min_size
         self.room_max_size = room_max_size
         self.current_floor = current_floor
+        self.total_floors = total_floors
+
+    def total_dungeon(self) -> None:
+        if self.current_floor <= self.total_floors :
+            print("builing new floor")
+            self.generate_floor()
+        else:
+            print("oopsie poopsie")
+            
 
     def generate_floor(self) -> None:
         from procgen import generate_dungeon

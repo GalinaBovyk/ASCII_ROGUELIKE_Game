@@ -7,6 +7,7 @@ from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 
 import tcod.event
 
+
 import actions
 from actions import Action, BumpAction, PickupAction, WaitAction
 
@@ -49,6 +50,7 @@ WAIT_KEYS ={
 CONFIRM_KEYS = {
     tcod.event.K_RETURN,
     tcod.event.K_KP_ENTER,
+#    tcod.event.MouseButtonDown
 }
 
 ActionOrHandler = Union[Action, "BaseEventHandler"]
@@ -179,7 +181,7 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x=x,
             y=y,
             width=width,
-            height=7,
+            height=8,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
@@ -202,6 +204,9 @@ class CharacterScreenEventHandler(AskUserEventHandler):
         console.print(
             x=x +1, y=y +5, string=f"Armor Class: {self.engine.player.fighter.armorclass}"
         )
+        console.print(
+            x=x +1, y=y +6, string=f"Magic Mod: {self.engine.player.fighter.magic}"
+        )
         
 
 class LevelUpEventHandler(AskUserEventHandler):
@@ -218,7 +223,7 @@ class LevelUpEventHandler(AskUserEventHandler):
             x=x,
             y=0,
             width=35,
-            height=8,
+            height=9,
             title=self.TITLE,
             clear=True,
             fg=(255,255,255),
@@ -246,18 +251,26 @@ class LevelUpEventHandler(AskUserEventHandler):
             string=f"c) Armour Class (+1 from {self.engine.player.fighter.armorclass})",
         )
 
+        console.print(
+            x=x  +1,
+            y=7,
+            string=f"d) Magic Power (+1 from {self.engine.player.fighter.magic})",
+        )
+
     def ev_keydown(self, event: tcod.event.keyDown) -> Optional[ActionOnHandler]:
         player = self.engine.player
         key = event.sym
         index = key - tcod.event.K_a
 
-        if 0 <= index <= 2:
+        if 0 <= index <= 3:
             if index == 0:
                 player.level.increase_max_hp()
             elif index ==1:
                 player.level.increase_strength()
-            else:
+            elif index == 2:
                 player.level.increase_armorclass()
+            else:
+                player.level.increase_magic()
         else:
             self.engine.message_log.add_message("Invalid entry.", color.invalid)
 
@@ -478,6 +491,8 @@ class MainGameEventHandler(EventHandler):
             return CharacterScreenEventHandler(self.engine)
         elif key == tcod.event.K_SLASH:
             return LookHandler(self.engine)
+        elif key == tcod.event.K_h:
+            return HelpEventHandler(self.engine)
 
         return action
 
@@ -541,6 +556,49 @@ class HistoryViewer(EventHandler):
                 return MainGameEventHandler(self.engine)
             return None
         
+
+
+
+class HelpEventHandler(EventHandler):
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+        -1
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+        help_console = tcod.Console(console.width - 6, console.height - 6)
+
+        help_console.draw_frame(0,0, help_console.width, help_console.height)
+
+        help_console.print_box(
+            0,0, help_console.width, 1,"Here is some helpful tips about controls:", alignment=tcod.CENTER
+        )
+        for i, text in enumerate(
+            ["add ", "help","here"]
+        ):
+            console.print(
+                help_console.width//2,
+                help_console.height -2 - i,
+                text.ljust(help_console.width),
+                alignment=tcod.CENTER,
+            )
+        
+        help_console.blit(console, 3, 3)
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[MainGameEventHandler]:
+        if event.sym in CURSOR_Y_KEYS:
+            adjust = CURSOR_Y_KEYS[event.sym]
+            if adjust <0 and self.cursor == 0:
+                self.cursor = self.log_length - 1
+            elif adjust >0 and self.cursor == self.log_length -1:
+                self.cursor = 0
+            else:
+                return MainGameEventHandler(self.engine)
+            return None
+        
+
 
 
 

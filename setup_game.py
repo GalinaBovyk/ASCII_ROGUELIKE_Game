@@ -32,6 +32,8 @@ def new_game() -> Engine:
     max_rooms = 30
     room_min_size = 5
     room_max_size = 17
+
+    total_floors = 5
     
 
     player = copy.deepcopy(entity_factories.player)
@@ -49,10 +51,11 @@ def new_game() -> Engine:
         room_max_size=room_max_size,
         map_width=map_width,
         map_height=map_height,
+        total_floors=total_floors
     
     )
 
-    engine.game_world.generate_floor()
+    engine.game_world.total_dungeon()
     engine.update_fov()
     #maybe actually print this before the map? after the map? do kind of like a NetHack moment?
     engine.message_log.add_message(
