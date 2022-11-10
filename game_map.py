@@ -40,7 +40,7 @@ class GameMap:
         return self
 
     @property
-    def actors(self) -> iterator[Actor]:
+    def actors(self) -> Iterator[Actor]:
         yield from(
             entity
             for entity in self.entities
@@ -122,7 +122,7 @@ class GameWorld:
 
     def total_dungeon(self) -> None:
         if self.current_floor <= self.total_floors :
-            print("builing new floor")
+            
             self.generate_floor()
         else:
             print("oopsie poopsie")

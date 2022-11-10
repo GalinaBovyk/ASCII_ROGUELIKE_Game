@@ -108,15 +108,17 @@ class SnakeEnemy(BaseAI):
     def perform(self) -> None:
         target = self.engine.player
 #        target = self.engine.game_map.entities.GameMap.actors.small_evil_snake
-#        target = self.engine.game_map.actors(small_evil_snake)
-#        target = self.engine.game_map.dungeon.entities.small_evil_snake
+#        target = self.engine.game_map.actors.small_evil_snake
+#        target = self.engine.game_world.dungeon.entities.small_evil_snake
+#        target = self.engine.game_map
+#        print(f"{target}")
         
  #       print(f"i cat, my target is {target}")
         
         dx = target.x - self.entity.x
         dy = target.y - self.entity.y
         distance = max(abs(dx), abs(dy))
-        #print(f"its at {target.x} and {target.y} away")
+#        print(f"its at {target.x} and {target.y} away")
 
         if self.engine.game_map.visible[self.entity.x, self.entity.y]:
      #       print(f"{distance}")

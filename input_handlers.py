@@ -50,7 +50,7 @@ WAIT_KEYS ={
 CONFIRM_KEYS = {
     tcod.event.K_RETURN,
     tcod.event.K_KP_ENTER,
-#    tcod.event.MouseButtonDown
+    tcod.event.MouseButtonDown
 }
 
 ActionOrHandler = Union[Action, "BaseEventHandler"]
@@ -400,6 +400,8 @@ class SelectIndexHandler(AskUserEventHandler):
             return None
         elif key in CONFIRM_KEYS:
             return self.on_index_selected(*self.engine.mouse_location)
+        elif tcod.event.MouseButtonDown:
+            return self.on_index_selected(*self.engine.mouse_location)
         return super().ev_keydown(event)
     
     def ev_mousebutton(
@@ -563,7 +565,7 @@ class HelpEventHandler(EventHandler):
 
     def __init__(self, engine: Engine):
         super().__init__(engine)
-        -1
+        
 
     def on_render(self, console: tcod.Console) -> None:
         super().on_render(console)
@@ -572,31 +574,73 @@ class HelpEventHandler(EventHandler):
 
         help_console.draw_frame(0,0, help_console.width, help_console.height)
 
+       # help_console.print_box(
+            #0,0, help_console.width, 1,"Here is some helpful tips about controls:", alignment=tcod.CENTER
+        #)
+        for i, text in enumerate(
+            ["So you have some questions about how to play this game?",
+             "Its actually not too complicated -",
+             "You desend down the monty dungeon, gathering XP and Treasure",
+             "There are enemies that will try to attack you",
+             "Luckily you have STRENGTH, MAGIC and ARMOR CLASS",
+             "to fight with and protect you",
+             "",
+             "THE MAIN MOVEMENT CONTROLLS: ",
+             "",
+             "ARROW KEYS - movement",
+             "NUM PAD - movement(8,4,6,2) + diagonal movement(7,9,1,3)",
+             "",
+             "DISPLAY CONTROLS:",
+             "",
+             "v - log history (press down arrow to exit)",
+             "c - character stat display (press any key to exiy)",
+             "",
+             "ACTION CONTROLS:",
+             "",
+             "i - display Inventory (click Enter to exit)",
+             "",
+             "While in the Inventory you can use an object to:",
+             "",
+             "1) Consume a healing object",
+             "2) Wear an Item",
+             "3) Cast a spell",
+             "",
+             "You do this by pressing the index number",
+             "Some scrolls require aiming - you do that with the mouse",
+             "and the confirm it with the Enter key",
+             "",
+             "g - grab an object from the ground(adds it to your inventory)",
+             "d - drop an object from the inventory",
+             "",
+             "> (shift + .) - to go down the stairs",
+             "",
+             "if you don't know what something is - ",
+             "you can point your mouse at it to find basic information",
+             "(mouse click to exit)",
+             ]
+        ):
+            help_console.print(
+                help_console.width //2 +4,
+                help_console.height//2 - 18 + i ,
+                text.ljust(help_console.width - 5),
+                fg=color.white,
+                alignment=tcod.CENTER,
+            )
         help_console.print_box(
             0,0, help_console.width, 1,"Here is some helpful tips about controls:", alignment=tcod.CENTER
         )
-        for i, text in enumerate(
-            ["add ", "help","here"]
-        ):
-            console.print(
-                help_console.width//2,
-                help_console.height -2 - i,
-                text.ljust(help_console.width),
-                alignment=tcod.CENTER,
-            )
         
         help_console.blit(console, 3, 3)
 
-    def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[MainGameEventHandler]:
-        if event.sym in CURSOR_Y_KEYS:
-            adjust = CURSOR_Y_KEYS[event.sym]
-            if adjust <0 and self.cursor == 0:
-                self.cursor = self.log_length - 1
-            elif adjust >0 and self.cursor == self.log_length -1:
-                self.cursor = 0
-            else:
-                return MainGameEventHandler(self.engine)
-            return None
+
+    def ev_mousebuttondown(
+        self, event: tcod.event.MouseButtonDown,
+    ) -> Optional[ActionOrHandler]:
+        
+        return MainGameEventHandler(self.engine)
+
+
+
         
 
 

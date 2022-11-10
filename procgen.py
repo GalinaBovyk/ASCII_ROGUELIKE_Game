@@ -37,7 +37,7 @@ item_chances: Dict[int, List[Tuple[Entity, int]]] = {
 }
 
 enemy_chances: Dics[int, List[Tuple[Entity, int]]] ={
-    1: [((entity_factories.small_evil_snake, 40))],
+    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
     3: [((entity_factories.big_evil_snake, 30))],
     5: [((entity_factories.worm, 20))],
     7: [((entity_factories.duck, 20))],
@@ -237,6 +237,7 @@ def generate_dungeon(
         elif len(rooms) == 1:
             for x, y in tunnel_between (rooms[-1].center, new_room.center):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    dungeon.tiles[x,y] == tile_types.floor
                     types_used.append(tile_types.floor)
                     continue
                     
@@ -245,15 +246,39 @@ def generate_dungeon(
                         break
                     else:
                         dungeon.tiles[x,y] = tile_types.door
+                        if random.random() < 0.6:
+                            entity_factories.closed_door.spawn(dungeon, x, y)
                         types_used.append(tile_types.wall)
                     
 
                 else:
                     dungeon.tiles[x,y] = tile_types.tunnel
                     types_used.append(tile_types.tunnel)
+                    
+            for x, y in tunnel_between (rooms[-1].side, new_room.side):
+                if dungeon.tiles[x,y] == tile_types.floor:
+                    dungeon.tiles[x,y] == tile_types.floor
+                    types_used.append(tile_types.floor)
+                    continue
+                    
+                elif dungeon.tiles[x,y] == tile_types.wall:
+                    if types_used[-1] == tile_types.wall:
+                        break
+                    else:
+                        dungeon.tiles[x,y] = tile_types.door
+                        if random.random() < 0.6:
+                            entity_factories.closed_door.spawn(dungeon, x, y)
+                        types_used.append(tile_types.wall)
+                else:
+                    dungeon.tiles[x,y] = tile_types.tunnel
+                    types_used.append(tile_types.tunnel)
+
+
+                    
         else:
             for x, y in tunnel_between (rooms[-1].center, new_room.center):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    dungeon.tiles[x,y] == tile_types.floor
                     types_used.append(tile_types.floor)
                     continue
                 elif dungeon.tiles[x,y] == tile_types.wall:
@@ -261,6 +286,8 @@ def generate_dungeon(
                         break
                     else:
                         dungeon.tiles[x,y] = tile_types.door
+                        if random.random() < 0.6:
+                            entity_factories.closed_door.spawn(dungeon, x, y)
                         types_used.append(tile_types.wall)
             
 
@@ -271,6 +298,7 @@ def generate_dungeon(
                     
             for x, y in tunnel_between (random.choice(rooms).side, new_room.side):
                 if dungeon.tiles[x,y] == tile_types.floor:
+                    dungeon.tiles[x,y] == tile_types.floor
                     types_used.append(tile_types.floor)
                     continue
                 elif dungeon.tiles[x,y] == tile_types.wall:
@@ -278,6 +306,8 @@ def generate_dungeon(
                         break
                     else:
                         dungeon.tiles[x,y] = tile_types.door
+                        if random.random() < 0.6:
+                            entity_factories.closed_door.spawn(dungeon, x, y)
                         types_used.append(tile_types.wall)
 
                 else:

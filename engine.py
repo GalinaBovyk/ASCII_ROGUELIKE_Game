@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 from tcod.context import Context
 from tcod.console import Console
 from tcod.map import compute_fov
+import entity_factories 
 
 
 
@@ -35,10 +36,12 @@ class Engine:
         self.message_log = MessageLog()
         self.mouse_location = (0,0)
         self.player = player
+        
 ##        self.enemy_ss = enemy_ss
 ##        self.enemy_bs = enemy_bs
 ##        self.enemy_w = enemy_w
 ##        self.duck = duck
+        
 
 
     def handle_enemy_turns(self) -> None:

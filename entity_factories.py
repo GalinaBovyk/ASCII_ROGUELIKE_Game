@@ -10,6 +10,7 @@ from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 from entity import Actor, Item
+import random
 
 
 
@@ -81,14 +82,14 @@ golden_duck = Actor(
     inventory=Inventory(capacity=1),
     level=Level(xp_given=200),
 )
-
+door_strength = random.randint(5,50)
 closed_door = Actor(
     char="B",
     color=(219, 156, 26),
     name="Closed Door",
     ai_cls=ClosedDoor,
     equipment=Equipment(),
-    fighter=Fighter(hp=2, base_armorclass=0, base_strength=0, base_magic=0),
+    fighter=Fighter(hp=door_strength, base_armorclass=0, base_strength=0, base_magic=0),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0),
 )
@@ -109,14 +110,14 @@ nice_note = Item(
 
 deadline_list = Item(
     char="?",
-    color=(216, 191, 219),
+    color=(234, 177, 252),
     name= "List of Deadlines",
     consumable=consumable.FatigueDamageConsumable(damage=10, maximum_range=5),
 )
 
 complicated_math_equation = Item(
     char="?",
-    color=(197, 191, 219),
+    color=(66, 245, 239),
     name ="Complicated Math Equasions",
     consumable=consumable.ConfusionConsumable(number_of_turns=10),
 )

@@ -41,6 +41,21 @@ def render_bar(
     console.print(
         x=1, y = 50, string=f"HP:{current_value}/{maximum_value}", fg=color.bar_text
     )
+##    if bar_width >= 0.7:
+##        for i, text in enumerate(
+##                [" _--_ _--_ ",
+##                 "(    V    )",
+##                 " \       / ",
+##                 "  \     /  ",
+##                 "    \v/    "
+##                 ]
+##            ):
+##                console.print(
+##                    x = 1,
+##                    y= 51 + i ,
+##                    fg=color.bar_filled,
+##                    alignment=tcod.CENTER,
+##                )
 
 def render_dungeon_level(
     console: Console, dungeon_level: int, location: Tuple[int, int]

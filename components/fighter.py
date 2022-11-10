@@ -78,13 +78,21 @@ class Fighter(BaseComponent):
         else:
             death_message = f"{self.parent.name} is dead!"
             death_message_color = color.enemy_die
+        if self.parent.name == "Closed Door":
+            self.parent.char = "D"
+            self.parent.color = (120, 87, 42)
+            self.parent.blocks_movement = False
+            self.parent.ai = None
+            self.parent.name = f"The door falls open if front of you."
+            self.parent.render_order = RenderOrder.CORPSE
+        else:
 
-        self.parent.char = "%"
-        self.parent.color = (160, 0, 0)
-        self.parent.blocks_movement = False
-        self.parent.ai = None
-        self.parent.name = f"dismembered corpse of {self.parent.name}"
-        self.parent.render_order = RenderOrder.CORPSE
+            self.parent.char = "%"
+            self.parent.color = (160, 0, 0)
+            self.parent.blocks_movement = False
+            self.parent.ai = None
+            self.parent.name = f"dismembered corpse of {self.parent.name}"
+            self.parent.render_order = RenderOrder.CORPSE
 
         self.engine.message_log.add_message(death_message, death_message_color)
         self.engine.player.level.add_xp(self.parent.level.xp_given)

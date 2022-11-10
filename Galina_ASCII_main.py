@@ -44,18 +44,7 @@ def launch() -> None:
         vsync = True,
         ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
-##        while True:
-##            root_console.clear()
-##            engine.event_handler.on_render(console=root_console)
-##            context.present(root_console)
-##            try:
-##                for event in tcod.event.wait():
-##                    context.convert_event(event)
-##                    engine.event_handler.handle_events(event)
-##            except Exception:
-###                pass
-##                traceback.print_exc()
-##                engine.message_log.add_message(traceback.format_exc(), color.error)
+
         try:
             while True:
                 root_console.clear()
