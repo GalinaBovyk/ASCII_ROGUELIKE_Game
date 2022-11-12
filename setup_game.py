@@ -19,30 +19,35 @@ import entity_factories
 from game_map import GameWorld
 import input_handlers
 from procgen import generate_dungeon
+import GUI_start
 
-background_image = tcod.image.load("color0_copy_9.png")[:,:,:3]
+background_image = tcod.image.load("background_2.png")[:,:,:3]
 
 def new_game() -> Engine:
+    info = GUI_start.start_gui()
     
     screen_width = 80
-    screen_height = 55
+    screen_height = 60
 
     map_width = 80
     map_height = 50
-    max_rooms = 30
-    room_min_size = 5
-    room_max_size = 17
+    max_rooms = info[4]
+    room_min_size = info[3]
+    room_max_size = info[2]
+    difficulty = info[1]
 
-    total_floors = 5
+    total_floors = info[5]
     
 
     player = copy.deepcopy(entity_factories.player)
+    player.name = info[0]
     big_evil_snake = copy.deepcopy(entity_factories.big_evil_snake)
     duck = copy.deepcopy(entity_factories.duck)
     small_evil_snake = copy.deepcopy(entity_factories.small_evil_snake)
     worm = copy.deepcopy(entity_factories.worm)
     #engine = Engine(player=player,enemy_ss=small_evil_snake, enemy_bs=big_evil_snake, enemy_w=worm, duck=duck)
     engine = Engine(player=player)
+    
 
     engine.game_world = GameWorld(
         engine=engine,
@@ -51,7 +56,8 @@ def new_game() -> Engine:
         room_max_size=room_max_size,
         map_width=map_width,
         map_height=map_height,
-        total_floors=total_floors
+        total_floors=total_floors,
+        difficulty=difficulty,
     
     )
 
@@ -123,9 +129,10 @@ class MainMenu(input_handlers.BaseEventHandler):
                 traceback.print_exc()
                 return input_handlers.PopupMessage(self, f"Failed to load save:\n{exc}")
         elif event.sym == tcod.event.K_n:
+            #GUI_start.start_gui()
+            #trying()
             return input_handlers.MainGameEventHandler(new_game())
         return None
-
 
 
     

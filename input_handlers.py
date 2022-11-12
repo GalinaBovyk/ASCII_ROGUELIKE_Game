@@ -181,31 +181,34 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x=x,
             y=y,
             width=width,
-            height=8,
+            height=10,
             title=self.TITLE,
             clear=True,
             fg=(255, 255, 255),
             bg=(0,0,0),
         )
         console.print(
-            x=x +1, y=y +1, string=f"Level: {self.engine.player.level.current_level}"
+            x=x +1, y=y +2, string=f"{self.engine.player.name}"
         )
         console.print(
-            x=x +1, y=y + 2, string=f"XP: {self.engine.player.level.current_xp}"
+            x=x +1, y=y +3, string=f"Level: {self.engine.player.level.current_level}"
+        )
+        console.print(
+            x=x +1, y=y + 4, string=f"XP: {self.engine.player.level.current_xp}"
         )
         console.print(
             x=x +1,
-            y=y +3,
+            y=y +5,
             string=f"XP untill next Level: {self.engine.player.level.experience_to_next_level}",
         )
         console.print(
-            x=x +1, y=y + 4, string=f"Strength Mod: +{self.engine.player.fighter.strength}"
+            x=x +1, y=y + 6, string=f"Strength Mod: +{self.engine.player.fighter.strength}"
         )
         console.print(
-            x=x +1, y=y +5, string=f"Armor Class: {self.engine.player.fighter.armorclass}"
+            x=x +1, y=y +7, string=f"Armor Class: {self.engine.player.fighter.armorclass}"
         )
         console.print(
-            x=x +1, y=y +6, string=f"Magic Mod: {self.engine.player.fighter.magic}"
+            x=x +1, y=y +8, string=f"Magic Mod: +{self.engine.player.fighter.magic}"
         )
         
 
@@ -400,8 +403,6 @@ class SelectIndexHandler(AskUserEventHandler):
             return None
         elif key in CONFIRM_KEYS:
             return self.on_index_selected(*self.engine.mouse_location)
-        elif tcod.event.MouseButtonDown:
-            return self.on_index_selected(*self.engine.mouse_location)
         return super().ev_keydown(event)
     
     def ev_mousebutton(
@@ -580,10 +581,10 @@ class HelpEventHandler(EventHandler):
         for i, text in enumerate(
             ["So you have some questions about how to play this game?",
              "Its actually not too complicated -",
-             "You desend down the monty dungeon, gathering XP and Treasure",
-             "There are enemies that will try to attack you",
+             "You desend down the Monty dungeon, gathering XP and Items.",
+             "There are enemies that will try to attack you.",
              "Luckily you have STRENGTH, MAGIC and ARMOR CLASS",
-             "to fight with and protect you",
+             "to fight with and protect you.",
              "",
              "THE MAIN MOVEMENT CONTROLLS: ",
              "",
@@ -593,7 +594,7 @@ class HelpEventHandler(EventHandler):
              "DISPLAY CONTROLS:",
              "",
              "v - log history (press down arrow to exit)",
-             "c - character stat display (press any key to exiy)",
+             "c - character stat display (press any key to exit)",
              "",
              "ACTION CONTROLS:",
              "",

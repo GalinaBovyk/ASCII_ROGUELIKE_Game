@@ -75,6 +75,7 @@ class GameMap:
 
     def render(self, console: Console) -> None:
         #print(self.actors)
+        
 
 
         console.tiles_rgb[0 : self.width, 0 : self.height] = np.select(
@@ -107,6 +108,7 @@ class GameWorld:
         room_max_size: int,
         current_floor: int = 0,
         total_floors: int = 0,
+        difficulty: int = 1,
     ):
         self.engine = engine
 
@@ -119,11 +121,13 @@ class GameWorld:
         self.room_max_size = room_max_size
         self.current_floor = current_floor
         self.total_floors = total_floors
+        self.difficulty = difficulty
 
     def total_dungeon(self) -> None:
         if self.current_floor <= self.total_floors :
             
             self.generate_floor()
+            
         else:
             print("oopsie poopsie")
             
@@ -132,6 +136,7 @@ class GameWorld:
         from procgen import generate_dungeon
 
         self.current_floor +=1
+        
 
         self.engine.game_map = generate_dungeon(
             max_rooms=self.max_rooms,
@@ -139,6 +144,7 @@ class GameWorld:
             room_max_size=self.room_max_size,
             map_width=self.map_width,
             map_height=self.map_height,
+            difficulty=self.difficulty,
             engine=self.engine,
         )
 

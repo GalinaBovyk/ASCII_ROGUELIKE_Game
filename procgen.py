@@ -16,19 +16,19 @@ import tcod
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Entity
-
-max_items_by_floor = [
+#################################### easy difficulty
+max_items_by_floor_1 = [
     (1,1),
     (4,2),
 ]
 
-max_monsters_by_floor = [
+max_monsters_by_floor_1 = [
     (1,2),
     (4,3),
     (6,5),
 ]
 
-item_chances: Dict[int, List[Tuple[Entity, int]]] = {
+item_chances_1: Dict[int, List[Tuple[Entity, int]]] = {
     0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
     2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
     4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
@@ -36,13 +36,69 @@ item_chances: Dict[int, List[Tuple[Entity, int]]] = {
     8: [(entity_factories.the_one_ring, 1)],
 }
 
-enemy_chances: Dics[int, List[Tuple[Entity, int]]] ={
+enemy_chances_1: Dics[int, List[Tuple[Entity, int]]] ={
     1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
     3: [((entity_factories.big_evil_snake, 30))],
     5: [((entity_factories.worm, 20))],
     7: [((entity_factories.duck, 20))],
     9: [((entity_factories.golden_duck, 1))],
-}    
+}
+
+#################################### medium difficulty
+max_items_by_floor_2 = [
+    (1,0),
+    (4,2),
+]
+
+max_monsters_by_floor_2 = [
+    (1,0),
+    (4,3),
+    (6,5),
+]
+
+item_chances_2: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
+    2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
+    4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
+    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15)],
+    8: [(entity_factories.the_one_ring, 1)],
+}
+
+enemy_chances_2: Dics[int, List[Tuple[Entity, int]]] ={
+    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
+    3: [((entity_factories.big_evil_snake, 30))],
+    5: [((entity_factories.worm, 20))],
+    7: [((entity_factories.duck, 20))],
+    9: [((entity_factories.golden_duck, 1))],
+}
+
+#################################### hard difficulty
+max_items_by_floor_3 = [
+    (1,1),
+    (4,2),
+]
+
+max_monsters_by_floor_3 = [
+    (1,2),
+    (4,3),
+    (6,5),
+]
+
+item_chances_3: Dict[int, List[Tuple[Entity, int]]] = {
+    0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
+    2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
+    4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
+    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15)],
+    8: [(entity_factories.the_one_ring, 1)],
+}
+
+enemy_chances_3: Dics[int, List[Tuple[Entity, int]]] ={
+    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
+    3: [((entity_factories.big_evil_snake, 30))],
+    5: [((entity_factories.worm, 20))],
+    7: [((entity_factories.duck, 20))],
+    9: [((entity_factories.golden_duck, 1))],
+}
 
 def get_max_value_for_floor(
     weighted_chances_by_floor: List[Tuple[int, int]], floor: int
@@ -134,56 +190,68 @@ class RectangularRoom:
         )
 
 def place_entities(
-    room: RectangularRoom, dungeon: GameMap, floor_number: int,) -> None:
-    number_of_monsters = random.randint(
-        0, get_max_value_for_floor(max_monsters_by_floor, floor_number)
-    )
-    number_of_items = random.randint(
-        0, get_max_value_for_floor(max_items_by_floor, floor_number)
-    )
-    monsters: List[Entity] = get_entities_at_random(
-        enemy_chances, number_of_monsters, floor_number
-    )
-    items: List[Entity] = get_entities_at_random(
-        item_chances, number_of_items, floor_number
-    )
+    room: RectangularRoom, dungeon: GameMap, floor_number: int, difficulty: int) -> None:
+    if difficulty == 1:
+        number_of_monsters = random.randint(
+            0, get_max_value_for_floor(max_monsters_by_floor_1, floor_number)
+        )
+        number_of_items = random.randint(
+            0, get_max_value_for_floor(max_items_by_floor_1, floor_number)
+        )
+        monsters: List[Entity] = get_entities_at_random(
+            enemy_chances_1, number_of_monsters, floor_number
+        )
+        items: List[Entity] = get_entities_at_random(
+            item_chances_1, number_of_items, floor_number
+        )
+        for entity in monsters + items:
+            x = random.randint(room.x1 + 2, room.x2 - 2)
+            y = random.randint(room.y1 + 2, room.y2 - 2)
+            item_chance = random.random()
 
-##    for i in range(number_of_monsters):
-##        x = random.randint(room.x1 + 2, room.x2 - 2)
-##        y = random.randint(room.y1 + 2, room.y2 - 2)
-##
-##        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-##            if random.random() < 0.5:
-##                entity_factories.small_evil_snake.spawn(dungeon, x, y)# small evil snake
-##            elif 0.5 < random.random() < 0.8:
-##                entity_factories.big_evil_snake.spawn(dungeon, x, y) # big evil snake
-##            elif  0.8 <= random.random() < 0.95:
-##                entity_factories.worm.spawn(dungeon, x, y) # worm
-##            elif 0.95 <= random.random():
-##                entity_factories.golden_duck.spawn(dungeon, x, y) # duck
-##            else:
-##                entity_factories.duck.spawn(dungeon, x, y) # golden duck
-    
-#    for i in range(number_of_items):
-    for entity in monsters + items:
-        x = random.randint(room.x1 + 2, room.x2 - 2)
-        y = random.randint(room.y1 + 2, room.y2 - 2)
-        item_chance = random.random()
+            if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+                entity.spawn(dungeon, x,y)
+    elif difficulty == 2:
+        number_of_monsters = random.randint(
+            0, get_max_value_for_floor(max_monsters_by_floor_2, floor_number)
+        )
+        number_of_items = random.randint(
+            0, get_max_value_for_floor(max_items_by_floor_2, floor_number)
+        )
+        monsters: List[Entity] = get_entities_at_random(
+            enemy_chances_2, number_of_monsters, floor_number
+        )
+        items: List[Entity] = get_entities_at_random(
+            item_chances_2, number_of_items, floor_number
+        )
+        for entity in monsters + items:
+            x = random.randint(room.x1 + 2, room.x2 - 2)
+            y = random.randint(room.y1 + 2, room.y2 - 2)
+            item_chance = random.random()
 
-        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
-##            if item_chance < 0.4:
-##                entity_factories.energy_drink.spawn(dungeon, x, y)
-##            elif 0.4< item_chance < 0.5:
-##                entity_factories.deadline_list.spawn(dungeon, x, y)
-##            elif 0.5< item_chance < 0.6:
-##                entity_factories.complicated_math_equation.spawn(dungeon, x, y)
-##            elif 0.6< item_chance < 0.7:
-##                entity_factories.stink_bomb.spawn(dungeon, x, y)
-##                
-##            else:
-##                entity_factories.nice_note.spawn(dungeon, x, y)
-            entity.spawn(dungeon, x,y)
-            
+            if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+                entity.spawn(dungeon, x,y)
+    else:
+        number_of_monsters = random.randint(
+            0, get_max_value_for_floor(max_monsters_by_floor_3, floor_number)
+        )
+        number_of_items = random.randint(
+            0, get_max_value_for_floor(max_items_by_floor_3, floor_number)
+        )
+        monsters: List[Entity] = get_entities_at_random(
+            enemy_chances_3, number_of_monsters, floor_number
+        )
+        items: List[Entity] = get_entities_at_random(
+            item_chances_3, number_of_items, floor_number
+        )
+        for entity in monsters + items:
+            x = random.randint(room.x1 + 2, room.x2 - 2)
+            y = random.randint(room.y1 + 2, room.y2 - 2)
+            item_chance = random.random()
+
+            if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+                entity.spawn(dungeon, x,y)
+                   
                        
 
 def tunnel_between(
@@ -207,6 +275,7 @@ def generate_dungeon(
     room_max_size: int,
     map_width: int,
     map_height: int,
+    difficulty: int,
     engine: Engine,
 ) -> GameMap:
     player = engine.player
@@ -316,18 +385,71 @@ def generate_dungeon(
             center_of_last_room = new_room.center
 
                 
-        place_entities(new_room, dungeon, engine.game_world.current_floor)
+        place_entities(new_room, dungeon, engine.game_world.current_floor, difficulty)
         dungeon.tiles[center_of_last_room] = tile_types.down_stairs
         dungeon.downstairs_location = center_of_last_room
 
         rooms.append(new_room)
 
     return dungeon
+
+
+
+####################### my precious little safe
+
+##    for i in range(number_of_monsters):
+##        x = random.randint(room.x1 + 2, room.x2 - 2)
+##        y = random.randint(room.y1 + 2, room.y2 - 2)
+##
+##        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+##            if random.random() < 0.5:
+##                entity_factories.small_evil_snake.spawn(dungeon, x, y)# small evil snake
+##            elif 0.5 < random.random() < 0.8:
+##                entity_factories.big_evil_snake.spawn(dungeon, x, y) # big evil snake
+##            elif  0.8 <= random.random() < 0.95:
+##                entity_factories.worm.spawn(dungeon, x, y) # worm
+##            elif 0.95 <= random.random():
+##                entity_factories.golden_duck.spawn(dungeon, x, y) # duck
+##            else:
+##                entity_factories.duck.spawn(dungeon, x, y) # golden duck
+    
+#    for i in range(number_of_items):
+
+##            if item_chance < 0.4:
+##                entity_factories.energy_drink.spawn(dungeon, x, y)
+##            elif 0.4< item_chance < 0.5:
+##                entity_factories.deadline_list.spawn(dungeon, x, y)
+##            elif 0.5< item_chance < 0.6:
+##                entity_factories.complicated_math_equation.spawn(dungeon, x, y)
+##            elif 0.6< item_chance < 0.7:
+##                entity_factories.stink_bomb.spawn(dungeon, x, y)
+##                
+##            else:
+##                entity_factories.nice_note.spawn(dungeon, x, y)
+
+
+
+##    number_of_monsters = random.randint(
+##        0, get_max_value_for_floor(max_monsters_by_floor_1, floor_number)
+##    )
+##    number_of_items = random.randint(
+##        0, get_max_value_for_floor(max_items_by_floor_1, floor_number)
+##    )
+##    monsters: List[Entity] = get_entities_at_random(
+##        enemy_chances_1, number_of_monsters, floor_number
+##    )
+##    items: List[Entity] = get_entities_at_random(
+##        item_chances_1, number_of_items, floor_number
+##    )
+##    for entity in monsters + items:
+##        x = random.randint(room.x1 + 2, room.x2 - 2)
+##        y = random.randint(room.y1 + 2, room.y2 - 2)
+##        item_chance = random.random()
+##
+##        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+##            entity.spawn(dungeon, x,y)
+##            
         
-
-
-
-
 
 
 

@@ -67,7 +67,7 @@ class Engine:
     def render(self, console: Console) -> None:
         self.game_map.render(console)
 
-        self.message_log.render(console=console, x= 21, y = 51, width=40, height=4)
+        self.message_log.render(console=console, x= 21, y = 52, width=40, height=7)
 
         render_functions.render_bar(
             console=console,
@@ -82,7 +82,7 @@ class Engine:
         )
         
         render_functions.render_names_at_mouse_location(
-            console=console, x=0, y=51, engine=self
+            console=console, x=63, y=51, engine=self
         )
 
 
