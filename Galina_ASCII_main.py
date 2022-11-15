@@ -74,5 +74,5 @@ def launch() -> None:
 
 
 if __name__ == "__main__":
-    #random.seed(123)
+    #random.seed(42)
     launch()

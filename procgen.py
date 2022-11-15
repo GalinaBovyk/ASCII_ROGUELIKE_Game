@@ -6,6 +6,7 @@ from __future__ import annotations
 import random
 from typing import Dict, Iterator, List, Tuple, TYPE_CHECKING
 import tcod
+import numpy as np
 
 import entity_factories
 from game_map import GameMap
@@ -391,6 +392,22 @@ def generate_dungeon(
 
         rooms.append(new_room)
 
+    return dungeon
+
+
+
+def boss_room(
+        map_width: int,
+        map_height: int,
+        engine: Engine,
+) -> GameMap:
+    player = engine.player
+
+    dungeon = GameMap(engine, map_width, map_height, entities=[player])
+    dungeon.tiles = np.full((map_width, map_height), fill_value=tile_types.nice_space, order="F")
+    dungeon.tiles[39,26:48] = tile_types.tunnel
+    player.place(x=39,y=48)
+    entity_factories.epilouge.spawn(dungeon, 39, 27)
     return dungeon
 
 

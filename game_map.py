@@ -9,6 +9,7 @@ from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
 import numpy as np
 from tcod.console import Console
+import color
 
 from entity import Actor, Item
 import tile_types
@@ -124,12 +125,17 @@ class GameWorld:
         self.difficulty = difficulty
 
     def total_dungeon(self) -> None:
-        if self.current_floor <= self.total_floors :
+        if self.current_floor < self.total_floors :
             
             self.generate_floor()
             
         else:
-            print("oopsie poopsie")
+            self.engine.message_log.add_message(
+                "As you descend to the bottom of the dungeon you see a looming figure of a huge Python... Monty's Python.",
+                color.welcome_text
+            )
+            self.final_floor()
+            #print("oopsie poopsie")
             
 
     def generate_floor(self) -> None:
@@ -147,6 +153,16 @@ class GameWorld:
             difficulty=self.difficulty,
             engine=self.engine,
         )
+
+    def final_floor(self) -> None:
+        from procgen import boss_room
+        self.current_floor += 1
+        self.engine.game_map = boss_room(
+            map_width=self.map_width,
+            map_height=self.map_height,
+            engine=self.engine
+        )
+
 
 
 

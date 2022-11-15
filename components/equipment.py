@@ -111,7 +111,7 @@ class Equipment(BaseComponent):
             slot = "ring"
 
         if getattr(self, slot) == equippable_item:
-            self.uneqip_from_slot(slot, add_message)
+            self.unequip_from_slot(slot, add_message)
         else:
             self.equip_to_slot(slot, equippable_item, add_message)
         

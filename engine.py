@@ -12,6 +12,8 @@ from typing import TYPE_CHECKING
 from tcod.context import Context
 from tcod.console import Console
 from tcod.map import compute_fov
+
+import color
 import entity_factories 
 
 
@@ -24,7 +26,7 @@ import render_functions
 if TYPE_CHECKING:
     from entity import Actor
     from game_map import GameMap, GameWorld
-    #from input_handlers import EventHandler
+    from input_handlers import EndgameEventHandler
 
 class Engine:
     game_map: GameMap
@@ -66,24 +68,41 @@ class Engine:
         
     def render(self, console: Console) -> None:
         self.game_map.render(console)
+        if self.game_world.current_floor <= self.game_world.total_floors:
+            #print(f"{self.game_world.current_floor} bleh bleb blebh {self.game_world.total_floors}")
 
-        self.message_log.render(console=console, x= 21, y = 52, width=40, height=7)
 
-        render_functions.render_bar(
-            console=console,
-            current_value=self.player.fighter.hp,
-            maximum_value=self.player.fighter.max_hp,
-            total_width=20,
-        )
-        render_functions.render_dungeon_level(
-            console=console,
-            dungeon_level=self.game_world.current_floor,
-            location=(0, 49),
-        )
-        
-        render_functions.render_names_at_mouse_location(
-            console=console, x=63, y=51, engine=self
-        )
+            self.message_log.render(console=console, x= 21, y = 52, width=40, height=7)
+
+            render_functions.render_bar(
+                console=console,
+                current_value=self.player.fighter.hp,
+                maximum_value=self.player.fighter.max_hp,
+                total_width=20,
+            )
+            render_functions.render_dungeon_level(
+                console=console,
+                dungeon_level=self.game_world.current_floor,
+                location=(0, 49),
+            )
+
+            render_functions.render_names_at_mouse_location(
+                console=console, x=63, y=51, engine=self
+            )
+        elif self.game_world.current_floor -1 == self.game_world.total_floors:
+
+            render_functions.boss_print(
+                console=console
+            )
+            self.message_log.render(console=console, x=21, y=52, width=40, height=7)
+            #self.message_log.add_message("As you descend to the bottom of the dungeon you see a looming figure of a huge Python... Monty's Python.", color.welcome_text)
+
+        else:
+            print(f"{self.game_world.current_floor} out of {self.game_world.total_floors}")
+ #           render_functions.boss_print(
+ #               console=console
+ #           )
+
 
 
     def save_as(self, filename: str) -> None:

@@ -641,6 +641,77 @@ class HelpEventHandler(EventHandler):
         return MainGameEventHandler(self.engine)
 
 
+class EndgameEventHandler(EventHandler):
+
+    def __init__(self, engine: Engine):
+        super().__init__(engine)
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+        end_console = tcod.Console(console.width - 10, console.height - 12)
+
+
+        end_console.draw_frame(0, 0, end_console.width, end_console.height)
+
+
+        for i, text in enumerate(
+                ["You: So... You are the Monty Python?",
+                 " ",
+                 " ",
+                 " ",
+                 "Monty Python: Yessss",
+                 " ",
+                 " ",
+                 " ",
+                 "You: That doesn't make any sense... "
+                 " ",
+                 " ",
+                 " ",
+                 "Monty Python: You see, it's like a referencssee...",
+                 " ",
+                 " ",
+                 " ",
+                 "You: Wait, so this whole thing is like one big joke?",
+                 " ",
+                 " ",
+                 " ",
+                 "Monty Python: I guesss...",
+                 " ",
+                 " ",
+                 " ",
+                 "You: Well that's underwhelming. "
+                 " ",
+                 " ",
+                 " ",
+                 "You: ... ",
+                 " ",
+                 " ",
+                 " ",
+                 "Monty Python: ... ",
+                 " ",
+                 " ",
+                 " ",
+                 "Monty Python: Do you want tea?",
+                 ]
+        ):
+            end_console.print(
+                end_console.width // 2 + 4,
+                end_console.height // 2 - 18 + i,
+                text.ljust(end_console.width - 4),
+                fg=color.white,
+                alignment=tcod.CENTER,
+            )
+        end_console.print_box(
+            0, 0, end_console.width, 1, "Fnord", alignment=tcod.CENTER
+        )
+
+        end_console.blit(console, 3, 3)
+
+    def ev_mousebuttondown(
+            self, event: tcod.event.MouseButtonDown,
+    ) -> Optional[ActionOrHandler]:
+        return GameOverEventHandler(self.engine)
 
         
 

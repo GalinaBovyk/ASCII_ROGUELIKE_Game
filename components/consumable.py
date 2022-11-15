@@ -10,15 +10,17 @@ from typing import Optional, TYPE_CHECKING
 import actions
 import random
 import color
+import tcod
 import components.ai
 import components.inventory
 import components.inventory
 from components.base_component import BaseComponent
 from exceptions import Impossible
-from input_handlers import ActionOrHandler, AreaRangedAttackHandler, SingleRangedAttackHandler
+from input_handlers import ActionOrHandler, AreaRangedAttackHandler, SingleRangedAttackHandler, EndgameEventHandler
 
 if TYPE_CHECKING:
     from entity import Actor, Item
+
 
 class Consumable(BaseComponent):
     parent: Item
@@ -155,6 +157,24 @@ class StinkBombConsumable(Consumable):
         if not targets_hit:
             raise Impossible("No one is here to witness your Stink Bomb, so you decide to save it for later.")
         self.consume()
+
+class Endgame(Consumable):
+    def __init__(self):
+        print("woop")
+
+    def get_action(self, consumer: Actor) -> EndgameEventHandler:
+        return EndgameEventHandler(self.engine)
+
+
+    def activate(self, action: actions.ItemAction) -> EndgameEventHandler:
+        self.engine.message_log.add_message(
+            "You pick up the note and write on it everything you and the Python talked about.", color.white
+        )
+        return EndgameEventHandler(self.engine)
+
+
+
+
 
 
 

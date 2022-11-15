@@ -75,3 +75,9 @@ down_stairs = new_tile(
     light=(ord(">"), (135, 132, 123), (0,0,0))
 )
 
+nice_space = new_tile(
+    walkable=False,
+    transparent=True,
+    dark=(ord(" "),(0, 0, 0),(0, 0, 0)),
+    light=(ord(" "),(0, 0, 0),(0, 0, 0)),
+)

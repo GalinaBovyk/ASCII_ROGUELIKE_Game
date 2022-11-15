@@ -111,6 +111,53 @@ def render_names_at_mouse_location(
         console.print(x=x, y=y + y_offset , string=line)
         y_offset +=1
         
-        
+
+def boss_print( console: Console ):
+    console.print(x=1, y=1, string='''       ,)"""""")       )^^^^^)  /^^^^^/  \^"""""\   /^^^^^/              )""""""''', fg=color.white)
+    console.print(x=1, y=2, string='''     /""""""";'       /^^^^^/  (^^^^^(    \^"""""`;^^^^^;              ,;"""""""''', fg=color.white)
+    console.print(x=1, y=3, string='''  ,;"""""",~'        :^^^^^:   |^^^^^|     `\^"""(^^^^^(             ,/"""""""";''', fg=color.white)
+    console.print(x=1, y=4, string='''  (""""""(         ,!^^^^^^!   (^^^^^(       \^"""|^^^^^|`--__    ,;'"""""""",/ ''', fg=color.white)
+    console.print(x=1, y=5, string='''  !"""""",_--_,,__-!^^^^^^^)    `^^^^^`       `~.;^^^^^;'"""""`--'""""""""",/   ''', fg=color.white)
+    console.print(x=1, y=6, string='''   `;"",/^^^^^^^^^^^^^^^^^/      \^^^^^\        (^^^^^("""""""""""""""""",/     ''', fg=color.white)
+    console.print(x=1, y=7, string='''    \,/^^^^^^^^^^^^^^^^^,)        \^^^^^\       |^^^^^|\^"""""__-----__.;       ''', fg=color.white)
+    console.print(x=1, y=8, string='''    ~^^^^^^^^^^^,._--_.~           \^^^^^\      (^^^^^( `~-.;'^^^^^^^^^^`       ''', fg=color.white)
+    console.print(x=1, y=9, string='''   /^^^^^^^,_;/")                   \^^^^^\      ;^^^^^: __/^^^^^^^^^^^^^\      ''', fg=color.white)
+    console.print(x=1, y=10, string='''  (^^^^^^^(""""";                    )^^^^^)      \_^^^^^^^^^^^, __^^^^^^^\     ''', fg=color.white)
+    console.print(x=1, y=11, string='''  ;^^^^^^^;""""""\                  /^^^^^/         `__,^^^^^,~    `,^^^^^^\    ''', fg=color.white)
+    console.print(x=1, y=12, string='''  )^^^^^^,)""""""")                (^^^^^(              ;___~        )^^^^^^)   ''', fg=color.white)
+    console.print(x=1, y=13, string='''/^^^^^^^/!"""""""!                 |^^^^^|                          ;^^^^^^;    ''', fg=color.white)
+    console.print(x=1, y=14, string='''^^^^^^^) )""""""")                /^^^^^^^\                         (^^^^^(     ''', fg=color.white)
+    console.print(x=1, y=15, string='''^^^,/   /"""""""/                 \^^^^^^^/                         :^^^^^^: ,~.''', fg=color.white)
+    console.print(x=1, y=16, string='''__)     !""""""!                   \X^^^0/                           !^^^^^!/"""''', fg=color.white)
+    console.print(x=1, y=17, string='''       (""""""(                     \^^^/              /\            (^^^^^^("""''', fg=color.white)
+    console.print(x=1, y=18, string='''        )"""""")                     `w'               ("\            \_^^^^^\_"''', fg=color.white)
+    console.print(x=1, y=19, string='''       ;""""""';                      |                !""`~,__     __/"\^^^^^^|''', fg=color.white)
+    console.print(x=1, y=20, string='''  ,_--'"""""""(                      / \                `,"""""`~--'"""""~_^^^^^''', fg=color.white)
+    console.print(x=1, y=21, string=''',:""""""""""",)                                          `~,__"""""""""""",\^^^^''', fg=color.white)
+    console.print(x=1, y=22, string='''""""""""""""";                                                `~--,""""";/'.`~--''', fg=color.white)
+    console.print(x=1, y=23, string='''""""""""""",/                                                      `~~'"        ''', fg=color.white)
+    console.print(x=1, y=24, string='''"",;-,__--'                        _______                                      ''', fg=color.white)
+    console.print(x=41, y=25, string='''  \                                     ''', fg=color.white)
+    console.print(x=41, y=26, string='''   \                                    ''', fg=color.white)
+    console.print(x=41, y=27, string='''    |\                                  ''', fg=color.white)
+    console.print(x=41, y=28, string='''    | \                                 ''', fg=color.white)
+    console.print(x=41, y=29, string='''    |                                   ''', fg=color.white)
+    console.print(x=1, y=25, string='''./                                /''', fg=color.white)
+    console.print(x=1, y=26, string=''';                                / ''', fg=color.white)
+    console.print(x=1, y=27, string='''                               /|  ''', fg=color.white)
+    console.print(x=1, y=28, string='''                              / |  ''', fg=color.white)
+    console.print(x=1, y=29, string='''                                |  ''', fg=color.white)
+#    console.print(x=1, y=30, string='''......................................#.........................................''', fg=color.white)
+#    console.print(x=1, y=31, string='''......................................#.........................................''', fg=color.white)
+#    console.print(x=1, y=32, string='''......................................#.........................................''', fg=color.white)
+#    console.print(x=1, y=33, string='''......................................#.........................................''', fg=color.white)
+
+
+
+
+
+
+
+
     #console.print(x=x, y =y, string=f"{names_at_mouse_location}")
                                 

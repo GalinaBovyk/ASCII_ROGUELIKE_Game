@@ -11,6 +11,8 @@ from components.inventory import Inventory
 from components.level import Level
 from entity import Actor, Item
 import random
+import tcod
+from input_handlers import EndgameEventHandler
 
 
 
@@ -172,3 +174,9 @@ mood_ring = Item(
     equippable=equippable.MoodRing(),
 )
 
+epilouge = Item(
+    char="&",
+    color=(8, 153, 15),
+    name="Epilouge",
+    consumable=consumable.Endgame()
+)
