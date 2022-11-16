@@ -304,7 +304,7 @@ class InventoryEventHandler(AskUserEventHandler):
             x = 0
         y = 0
 
-        width = len(self.TITLE) + 10
+        width = len(self.TITLE) + 14
 
         console.draw_frame(
             x=x,
@@ -324,6 +324,19 @@ class InventoryEventHandler(AskUserEventHandler):
                 is_equipped = self.engine.player.equipment.item_is_equipped(item)
 
                 item_string = f"({item_key}) {item.name}"
+##                healing = item.consumable.amount
+##                damage = item.consumable.damage
+##                
+##
+##                #hp_mod = item.consumable.amount
+##                
+##                if healing:
+##                    hp_mod = item.consumable.amount
+##                    item_string = f"{item_string} (+ {hp_mod}hp)"
+##                if damage:
+##                    item_string = f"{item_string} (spell)"
+##                
+##                    
 
                 if is_equipped:
                     item_string = f"{item_string} (wearing rn)"

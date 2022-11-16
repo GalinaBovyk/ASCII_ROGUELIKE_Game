@@ -22,6 +22,6 @@ class Inventory(BaseComponent):
 
     def drop(self, item:Item) -> None:
         self.items.remove(item)
-        item.place(self.parent.x, self.parent.y, self.gamemap)
+        #item.place(self.parent.x, self.parent.y, self.gamemap)
 
         self.engine.message_log.add_message(f"You remove {item.name} from your pocket and place it on the gorund.")

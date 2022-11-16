@@ -21,84 +21,98 @@ if TYPE_CHECKING:
 max_items_by_floor_1 = [
     (1,1),
     (4,2),
+    (8,3),
 ]
 
 max_monsters_by_floor_1 = [
-    (1,2),
-    (4,3),
-    (6,5),
+    (1,1),
+    (2,2),
+    (3,4),
+    (4,5),
 ]
 
 item_chances_1: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
-    2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
-    4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
-    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15)],
-    8: [(entity_factories.the_one_ring, 1)],
+    0: [(entity_factories.energy_drink, 40),(entity_factories.nice_note, 20),(entity_factories.meal_plan, 40), (entity_factories.stolen_chipotle, 20) ],
+    2: [(entity_factories.deadline_list, 20), (entity_factories.complicated_math_equation, 20), (entity_factories.ink_bottle, 20), (entity_factories.parent_phone, 20), (entity_factories.magic_mood_ring, 20),(entity_factories.strength_mood_ring, 20), (entity_factories.armorclass_mood_ring, 20)],
+    3: [(entity_factories.stink_bomb, 20), (entity_factories.computer_mouse, 20),(entity_factories.face_mask, 20), (entity_factories.emergency_towel, 20), (entity_factories.wand, 20), (entity_factories.sunglasses, 20), (entity_factories.partyhat, 20)],
+    4: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15), (entity_factories.pepper_spray, 15), (entity_factories.platforms, 15), (entity_factories.costume, 15), (entity_factories.nerf_blaster, 15)],
+    8: [(entity_factories.the_one_ring, 10)],
 }
 
 enemy_chances_1: Dics[int, List[Tuple[Entity, int]]] ={
-    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
-    3: [((entity_factories.big_evil_snake, 30))],
-    5: [((entity_factories.worm, 20))],
-    7: [((entity_factories.duck, 20))],
-    9: [((entity_factories.golden_duck, 1))],
+    1: [(entity_factories.small_evil_snake, 20), (entity_factories.spider, 60), (entity_factories.worm, 20)],
+    3: [(entity_factories.big_evil_snake, 30), (entity_factories.duck, 10), (entity_factories.golden_duck, 1)],
+    5: [(entity_factories.professor, 20), (entity_factories.anim_student, 20)],
+    7: [(entity_factories.renderfarm_animal, 30)],
+    9: [(entity_factories.paulla_wallace, 1)],
 }
 
 #################################### medium difficulty
 max_items_by_floor_2 = [
-    (1,0),
-    (4,2),
+    (1,1),
+    (3,2)
+    (5,3),
+    
 ]
 
 max_monsters_by_floor_2 = [
-    (1,0),
+    (1,2),
     (4,3),
     (6,5),
 ]
 
 item_chances_2: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
-    2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
-    4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
-    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15)],
+    0: [(entity_factories.energy_drink, 20), (entity_factories.nice_note, 20), (entity_factories.meal_plan, 20), (entity_factories.stolen_chipotle, 20)],
+    2: [(entity_factories.deadline_list, 25), (entity_factories.complicated_math_equation, 25),(entity_factories.ink_bottle, 20), (entity_factories.parent_phone, 20), (entity_factories.magic_mood_ring, 20),(entity_factories.strength_mood_ring, 20), (entity_factories.armorclass_mood_ring, 20)],
+    4: [(entity_factories.stink_bomb, 25), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15), (entity_factories.emergency_towel, 15), (entity_factories.wand, 15), (entity_factories.sunglasses, 15), (entity_factories.partyhat, 15)],
+    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15), (entity_factories.pepper_spray, 15), (entity_factories.platforms, 15), (entity_factories.costume, 15), (entity_factories.nerf_blaster, 15)],
     8: [(entity_factories.the_one_ring, 1)],
 }
 
 enemy_chances_2: Dics[int, List[Tuple[Entity, int]]] ={
-    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
-    3: [((entity_factories.big_evil_snake, 30))],
-    5: [((entity_factories.worm, 20))],
-    7: [((entity_factories.duck, 20))],
-    9: [((entity_factories.golden_duck, 1))],
+    1: [(entity_factories.small_evil_snake, 70),(entity_factories.big_evil_snake, 20), (entity_factories.spider, 30), (entity_factories.worm, 30)],
+    3: [(entity_factories.big_evil_snake, 30), (entity_factories.duck, 10), (entity_factories.golden_duck, 1)],
+    5: [(entity_factories.professor, 40), (entity_factories.anim_student, 40)],
+    7: [(entity_factories.renderfarm_animal, 40)],
+    9: [(entity_factories.paulla_wallace, 10)],
 }
 
 #################################### hard difficulty
 max_items_by_floor_3 = [
     (1,1),
-    (4,2),
+    (5,2),
 ]
 
 max_monsters_by_floor_3 = [
     (1,2),
-    (4,3),
-    (6,5),
+    (2,3),
+    (4,5),
+    (6,7),
 ]
 
 item_chances_3: Dict[int, List[Tuple[Entity, int]]] = {
-    0: [(entity_factories.energy_drink, 40), (entity_factories.nice_note, 20), (entity_factories.mood_ring, 40)],
-    2: [(entity_factories.deadline_list, 90), (entity_factories.complicated_math_equation, 90)],
-    4: [(entity_factories.stink_bomb, 90), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15)],
-    6: [(entity_factories.keyboard, 15), (entity_factories.hoodie, 15)],
+    0: [(entity_factories.energy_drink, 10), (entity_factories.nice_note, 10), (entity_factories.meal_plan, 10), (entity_factories.stolen_chipotle, 10)],
+    2: [(entity_factories.deadline_list, 15), (entity_factories.complicated_math_equation, 15),(entity_factories.ink_bottle, 15), (entity_factories.parent_phone, 15), (entity_factories.magic_mood_ring, 15),(entity_factories.strength_mood_ring, 15), (entity_factories.armorclass_mood_ring, 15)],
+    4: [(entity_factories.stink_bomb, 25), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15), (entity_factories.emergency_towel, 15), (entity_factories.wand, 15), (entity_factories.sunglasses, 15), (entity_factories.partyhat, 15)],
+    6: [(entity_factories.keyboard, 10), (entity_factories.hoodie, 10), (entity_factories.pepper_spray, 10), (entity_factories.platforms, 10), (entity_factories.costume, 10), (entity_factories.nerf_blaster, 10)],
     8: [(entity_factories.the_one_ring, 1)],
 }
 
+##item_chances_3: Dict[int, List[Tuple[Entity, int]]] = {
+##    0: [(entity_factories.energy_drink, 10), (entity_factories.nice_note, 10),(entity_factories.meal_plan, 10), (entity_factories.stolen_chipotle, 10)],
+##    2: [[(entity_factories.deadline_list, 15), (entity_factories.complicated_math_equation, 15),(entity_factories.ink_bottle, 15), (entity_factories.parent_phone, 15), (entity_factories.magic_mood_ring, 15),(entity_factories.strength_mood_ring, 15), (entity_factories.armorclass_mood_ring, 15)],
+##    4: [(entity_factories.stink_bomb, 10), (entity_factories.computer_mouse, 15),(entity_factories.face_mask, 15), (entity_factories.emergency_towel, 15), (entity_factories.wand, 15), (entity_factories.sunglasses, 15), (entity_factories.partyhat, 15)],
+##    6: [(entity_factories.keyboard, 10), (entity_factories.hoodie, 10),(entity_factories.pepper_spray, 10), (entity_factories.platforms, 10), (entity_factories.costume, 10), (entity_factories.nerf_blaster, 10)],
+##    8: [(entity_factories.the_one_ring, 1)],
+##}
+
+
 enemy_chances_3: Dics[int, List[Tuple[Entity, int]]] ={
-    1: [(entity_factories.small_evil_snake, 40),(entity_factories.big_evil_snake, 70)],
-    3: [((entity_factories.big_evil_snake, 30))],
-    5: [((entity_factories.worm, 20))],
-    7: [((entity_factories.duck, 20))],
-    9: [((entity_factories.golden_duck, 1))],
+    1: [(entity_factories.small_evil_snake, 70),(entity_factories.big_evil_snake, 40), (entity_factories.spider, 20), (entity_factories.worm, 20)],
+    3: [(entity_factories.big_evil_snake, 40), (entity_factories.duck, 10), (entity_factories.golden_duck, 1)],
+    4: [(entity_factories.professor, 50), (entity_factories.anim_student, 50)],
+    5: [(entity_factories.renderfarm_animal, 50)],
+    9: [(entity_factories.paulla_wallace, 20)],
 }
 
 def get_max_value_for_floor(

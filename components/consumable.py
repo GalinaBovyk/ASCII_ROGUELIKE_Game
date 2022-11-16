@@ -83,6 +83,64 @@ class FatigueDamageConsumable(Consumable):
             self.consume()
         else:
             raise Impossible("No one is close enough to strike.")
+
+class InkDamageConsumable(Consumable):
+    def __init__(self, damage: int, maximum_range: int):
+        self.damage = damage
+        self.maximum_range = maximum_range
+
+    def activate(self, action: actions.ItemAction)-> None:
+        consumer = action.entity
+        target = None
+        closest_distance = self.maximum_range + 1.0
+        self.act_damage = consumer.fighter.magic + self.damage + random.randint(0,5)
+
+        for actor in self.engine.game_map.actors:
+            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
+                distance = consumer.distance(actor.x, actor.y)
+
+                if distance < closest_distance:
+                    target = actor
+                    closest_distance = distance
+    
+
+        if target:
+            self.engine.message_log.add_message(
+                f"You fake trip in front of the {target.name} and spill ink over its homework. {target.name} fails their assigment and takes {self.act_damage} damage."
+            )
+            target.fighter.take_damage(self.act_damage)
+            self.consume()
+        else:
+            raise Impossible("No one is close enough to strike.")
+
+class ParentDamageConsumable(Consumable):
+    def __init__(self, damage: int, maximum_range: int):
+        self.damage = damage
+        self.maximum_range = maximum_range
+
+    def activate(self, action: actions.ItemAction)-> None:
+        consumer = action.entity
+        target = None
+        closest_distance = self.maximum_range + 1.0
+        self.act_damage = consumer.fighter.magic + self.damage + random.randint(0,5)
+
+        for actor in self.engine.game_map.actors:
+            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
+                distance = consumer.distance(actor.x, actor.y)
+
+                if distance < closest_distance:
+                    target = actor
+                    closest_distance = distance
+    
+
+        if target:
+            self.engine.message_log.add_message(
+                f"You call {target.name}'s parents and tell them how much of a faliure {target.name} is. {target.name} is consumed by shame and takes {self.act_damage} damage."
+            )
+            target.fighter.take_damage(self.act_damage)
+            self.consume()
+        else:
+            raise Impossible("No one is close enough to strike.")
         
 
 
@@ -159,8 +217,7 @@ class StinkBombConsumable(Consumable):
         self.consume()
 
 class Endgame(Consumable):
-    def __init__(self):
-        print("woop")
+  #  def __init__(self):
 
     def get_action(self, consumer: Actor) -> EndgameEventHandler:
         return EndgameEventHandler(self.engine)

@@ -143,7 +143,7 @@ class MeleeAction(ActionWithDirection):
             attack_color = color.enemy_atk
         if damage > 0:
             self.engine.message_log.add_message(
-                f"{attack_desc} and it hurts for {damage} hit points.", attack_color
+                f"{attack_desc}, and {target.name} looses {damage} hit points.", attack_color
             )
             target.fighter.hp -= damage
         else:
