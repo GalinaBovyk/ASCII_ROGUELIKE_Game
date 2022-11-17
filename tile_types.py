@@ -1,9 +1,14 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This is a library of the tiles in the game
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
+####################
 
 from typing import Tuple
-
 import numpy as np
 
 graphic_dt = np.dtype(

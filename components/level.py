@@ -1,12 +1,15 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This manages leveling up
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
-
 from typing import TYPE_CHECKING
-
 from components.base_component import BaseComponent
 
 if TYPE_CHECKING:
@@ -42,7 +45,9 @@ class Level(BaseComponent):
             return
         self.current_xp += xp
 
-        self.engine.message_log.add_message(f"You absorb {xp} experience points.")
+        self.engine.message_log.add_message(
+            f"You absorb {xp} experience points."
+        )
 
         if self.requires_level_up:
             self.engine.message_log.add_message(
@@ -74,16 +79,3 @@ class Level(BaseComponent):
         self.parent.fighter.base_magic += amount
         self.engine.message_log.add_message("You feel magic tingle between your fingers.")
         self.increase_level()
-
-        
-
-
-
-
-
-
-
-            
-            
-        
-        

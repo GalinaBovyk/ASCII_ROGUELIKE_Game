@@ -1,16 +1,19 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This is keeps track of the floors and calls the appropriate
+# dungeon generatopm tools.
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
-
 from typing import Iterable, Iterator, Optional, TYPE_CHECKING
-
 import numpy as np
 from tcod.console import Console
 import color
-
 from entity import Actor, Item
 import tile_types
 
@@ -20,6 +23,7 @@ if TYPE_CHECKING:
 
 
 class GameMap:
+    #  This class keeps track on what's on the map and where it is
     def __init__(
         self, engine: Engine, width:int, height:int, entities: Iterable[Entity] = ()
     ):
@@ -70,14 +74,11 @@ class GameMap:
                 return actor
         return None
 
-
     def in_bounds(self, x:int, y:int) -> bool:
         return 0 <=x < self.width and 0 <=y <self.height
 
+    #  This is what communicates what gets displayed on the console
     def render(self, console: Console) -> None:
-        #print(self.actors)
-        
-
 
         console.tiles_rgb[0 : self.width, 0 : self.height] = np.select(
             condlist=[self.visible,self.explored],
@@ -89,8 +90,6 @@ class GameMap:
             self.entities, key=lambda x: x.render_order.value
         )
 
-        
-
         for entity in entities_sorted_for_rendering:
             if self.visible[entity.x,entity.y]:
                 console.print(
@@ -98,6 +97,9 @@ class GameMap:
                 )
 
 class GameWorld:
+    #  This class keeps track of the set up of the whole game
+    #  This includes what dungeon level it is as well
+    #  as the total dungeon
     def __init__(
         self,
         *,
@@ -123,7 +125,12 @@ class GameWorld:
         self.current_floor = current_floor
         self.total_floors = total_floors
         self.difficulty = difficulty
-
+    
+    #####  This part was specifically modified by me  #####
+    #  To make the game finate I added an extra variable
+    #  The total floors is the cap on how many floors there can be
+    #  This funciton makes sure that after that many leveles are defeated
+    #  the player can go to the boss room
     def total_dungeon(self) -> None:
         if self.current_floor < self.total_floors :
             
@@ -131,13 +138,13 @@ class GameWorld:
             
         else:
             self.engine.message_log.add_message(
-                "As you descend to the bottom of the dungeon you see a looming figure of a huge Python... Monty's Python.",
+                "As you descend to the bottom of the dungeon you see a"
+                "looming figure of a huge Python... Monty's Python.",
                 color.welcome_text
             )
             self.final_floor()
-            #print("oopsie poopsie")
             
-
+    #  This generates a generic dungeon floor
     def generate_floor(self) -> None:
         from procgen import generate_dungeon
 
@@ -161,11 +168,4 @@ class GameWorld:
             map_width=self.map_width,
             map_height=self.map_height,
             engine=self.engine
-        )
-
-
-
-
-
-
-                
+        )             

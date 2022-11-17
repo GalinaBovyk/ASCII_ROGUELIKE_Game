@@ -1,8 +1,12 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This defines a figther which makes the actor be able to take actions
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
-#
+####################
 
 from __future__ import annotations
 
@@ -17,10 +21,18 @@ from render_order import RenderOrder
 if TYPE_CHECKING:
     from entity import Actor
 
+#####  This part was specifically modified by me  #####
+# I added amgic as a seperate stat as well as making spell damage
+# be modified by magic and not strength
 class Fighter(BaseComponent):
     parent: Actor
     
-    def __init__(self, hp: int, base_armorclass: int, base_strength: int, base_magic: int):
+    def __init__(
+        self, hp: int,
+        base_armorclass: int,
+        base_strength: int,
+        base_magic: int,
+    ):
         self.max_hp = hp
         self._hp = hp
         self.base_armorclass = base_armorclass
@@ -71,19 +83,30 @@ class Fighter(BaseComponent):
             return 0
 
     def die(self) -> None:
+    #####  This part was specifically modified by me  #####
+    #  Because I have closed and open doors - depending on the
+    #  name of what is dying it will display different death
+    #  and corpse messages
+        
         if self.engine.player is self.parent:
             death_message = "You perish..."
             death_message_color = color.player_die
+
+        elif self.parent.name == "Closed Door":
+            death_message = "The door falls open in front of you."
+            death_message_color = color.descend
         
         else:
+            
             death_message = f"{self.parent.name} is dead!"
             death_message_color = color.enemy_die
+            
         if self.parent.name == "Closed Door":
             self.parent.char = "D"
             self.parent.color = (120, 87, 42)
             self.parent.blocks_movement = False
             self.parent.ai = None
-            self.parent.name = f"The door falls open if front of you."
+            self.parent.name = "Opened Door"
             self.parent.render_order = RenderOrder.CORPSE
         else:
 
@@ -113,10 +136,3 @@ class Fighter(BaseComponent):
 
     def take_damage(self, amount: int) -> None:
         self.hp -= amount
-
-
-
-
-        
-
-    

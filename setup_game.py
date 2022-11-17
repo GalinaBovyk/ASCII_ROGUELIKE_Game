@@ -1,18 +1,20 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This sets up the game
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
-
 import copy
 import lzma
 import pickle
 import traceback
 from typing import Optional
-
 import tcod
-
 import color
 from engine import Engine
 import entity_factories
@@ -24,6 +26,8 @@ import GUI_start
 background_image = tcod.image.load("background_2.png")[:,:,:3]
 
 def new_game() -> Engine:
+    #####  This part was specifically modified by me  #####
+    #  This collects the information from the GUI
     info = GUI_start.start_gui()
     
     screen_width = 80
@@ -35,20 +39,12 @@ def new_game() -> Engine:
     room_min_size = info[3]
     room_max_size = info[2]
     difficulty = info[1]
-
     total_floors = info[5]
     
-
     player = copy.deepcopy(entity_factories.player)
     player.name = info[0]
-    big_evil_snake = copy.deepcopy(entity_factories.big_evil_snake)
-    duck = copy.deepcopy(entity_factories.duck)
-    small_evil_snake = copy.deepcopy(entity_factories.small_evil_snake)
-    worm = copy.deepcopy(entity_factories.worm)
-    #engine = Engine(player=player,enemy_ss=small_evil_snake, enemy_bs=big_evil_snake, enemy_w=worm, duck=duck)
     engine = Engine(player=player)
     
-
     engine.game_world = GameWorld(
         engine=engine,
         max_rooms=max_rooms,
@@ -57,23 +53,20 @@ def new_game() -> Engine:
         map_width=map_width,
         map_height=map_height,
         total_floors=total_floors,
-        difficulty=difficulty,
-    
+        difficulty=difficulty,    
     )
 
     engine.game_world.total_dungeon()
     engine.update_fov()
-    #maybe actually print this before the map? after the map? do kind of like a NetHack moment?
     engine.message_log.add_message(
-        "After sitting in Monty working on your Python script you finally passed out on your desk... only to suddenly wake up in a dungeon!", color.welcome_text
+        "After sitting in Monty working on your Python script you "
+        "finally passed out on your desk... "
+        "only to suddenly wake up in a dungeon!",
+        color.welcome_text,
     )
 
-    #
-    #
-    # could technically start with equipment but its kinda lame
-    ##
-    
     return engine
+
 
 def load_game(filename: str) -> Engine:
     with open(filename, "rb") as  f:
@@ -81,6 +74,8 @@ def load_game(filename: str) -> Engine:
     assert isinstance(engine, Engine)
     return engine
 
+
+# This creates the Main Menu
 class MainMenu(input_handlers.BaseEventHandler):
 
     def on_render(self, console: tcod.Console) -> None:
@@ -97,7 +92,8 @@ class MainMenu(input_handlers.BaseEventHandler):
         console.print(
             console.width//2,
             console.height -2,
-            "By Galina Bovykina, Fall 2022 VSFX313, Individual Research, Prof. Gray Marshall",
+            "By Galina Bovykina, Fall 2022 VSFX313, "
+            "Individual Research, Prof. Gray Marshall",
             fg=color.menu_title,
             bg=color.black,
             alignment=tcod.CENTER,
@@ -115,6 +111,7 @@ class MainMenu(input_handlers.BaseEventHandler):
                 alignment=tcod.CENTER,
                 bg_blend=tcod.BKGND_ALPHA(64),
             )
+            
     def ev_keydown(
         self, event: tcod.event.KeyDown
     ) -> Optional[input_handlers.BaseEventHandler]:
@@ -124,15 +121,16 @@ class MainMenu(input_handlers.BaseEventHandler):
             try:
                 return input_handlers.MainGameEventHandler(load_game("savegame.sav"))
             except FileNotFoundError:
-                return input_handlers.PopupMessage(self, "No saved game to load.")
+                return input_handlers.PopupMessage(
+                    self,
+                    "No saved game to load.",
+                )
             except Exception as exc:
                 traceback.print_exc()
-                return input_handlers.PopupMessage(self, f"Failed to load save:\n{exc}")
+                return input_handlers.PopupMessage(
+                    self,
+                    f"Failed to load save:\n{exc}",
+                )
         elif event.sym == tcod.event.K_n:
-            #GUI_start.start_gui()
-            #trying()
             return input_handlers.MainGameEventHandler(new_game())
         return None
-
-
-    

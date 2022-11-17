@@ -1,12 +1,16 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This creates the different types of consumables
+# Which were customized to fit the game
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
-
 from typing import Optional, TYPE_CHECKING
-
 import actions
 import random
 import color
@@ -16,12 +20,18 @@ import components.inventory
 import components.inventory
 from components.base_component import BaseComponent
 from exceptions import Impossible
-from input_handlers import ActionOrHandler, AreaRangedAttackHandler, SingleRangedAttackHandler, EndgameEventHandler
+from input_handlers import (
+    ActionOrHandler,
+    AreaRangedAttackHandler,
+    SingleRangedAttackHandler,
+    EndgameEventHandler,
+)
 
 if TYPE_CHECKING:
     from entity import Actor, Item
 
 
+# This is the super class from a consumable item
 class Consumable(BaseComponent):
     parent: Item
 
@@ -37,6 +47,8 @@ class Consumable(BaseComponent):
         if isinstance(inventory, components.inventory.Inventory):
             inventory.items.remove(entity)
 
+
+# This creates an item that specifically heals
 class HealingConsumable(Consumable):
     def __init__(self, amount: int):
         self.amount = amount
@@ -47,7 +59,8 @@ class HealingConsumable(Consumable):
 
         if amount_recovered> 0:
             self.engine.message_log.add_message(
-                f"You shove the {self.parent.name} down your throat and feel {amount_recovered} HP healthier!",
+                f"You shove the {self.parent.name} down your throat "
+                f"and feel {amount_recovered} HP healthier!",
                 color.health_recovered,
             )
             self.consume()
@@ -55,6 +68,8 @@ class HealingConsumable(Consumable):
         else:
             raise Impossible("You feel like you are already at your best.")
 
+
+# This creates different types of danage of consumables
 class FatigueDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
         self.damage = damage
@@ -77,12 +92,15 @@ class FatigueDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"You read out a list of the upcomping deadlines. A wave of exhaustion washes over {target.name} and it takes {self.act_damage} damage."
+                f"You read out a list of the upcomping deadlines. "
+                f"A wave of exhaustion washes over {target.name} "
+                f"and it takes {self.act_damage} damage."
             )
             target.fighter.take_damage(self.act_damage)
             self.consume()
         else:
             raise Impossible("No one is close enough to strike.")
+
 
 class InkDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
@@ -106,12 +124,15 @@ class InkDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"You fake trip in front of the {target.name} and spill ink over its homework. {target.name} fails their assigment and takes {self.act_damage} damage."
+                f"You fake trip in front of the {target.name} "
+                f"and spill ink over its homework. {target.name} "
+                f"fails their assigment and takes {self.act_damage} damage."
             )
             target.fighter.take_damage(self.act_damage)
             self.consume()
         else:
             raise Impossible("No one is close enough to strike.")
+
 
 class ParentDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
@@ -135,7 +156,9 @@ class ParentDamageConsumable(Consumable):
 
         if target:
             self.engine.message_log.add_message(
-                f"You call {target.name}'s parents and tell them how much of a faliure {target.name} is. {target.name} is consumed by shame and takes {self.act_damage} damage."
+                f"You call {target.name}'s parents and tell them "
+                f"how much of a faliure {target.name} is. {target.name} "
+                f"is consumed by shame and takes {self.act_damage} damage."
             )
             target.fighter.take_damage(self.act_damage)
             self.consume()
@@ -143,7 +166,7 @@ class ParentDamageConsumable(Consumable):
             raise Impossible("No one is close enough to strike.")
         
 
-
+# This creates a consumable that needs the user to aim
 class ConfusionConsumable(Consumable):
     def __init__(self, number_of_turns: int):
         self.number_of_turns = number_of_turns
@@ -166,20 +189,26 @@ class ConfusionConsumable(Consumable):
         if not self.engine.game_map.visible[action.target_xy]:
             raise Impossible("It's too dark to focus on a target.")
         if not target:
-            raise Impossible("Don't waste the scroll on empty space. Target someone!")
+            raise Impossible("Don't waste the scroll on empty space. "
+                             "Target someone!")
         if target is consumer:
-            raise Impossible ("You are already confused as it is, you should target someone else.")
+            raise Impossible ("You are already confused as it is,"
+                              " you should target someone else.")
 
         self.engine.message_log.add_message(
-            f"You say a complicated mathematical term. Last braincells leave {target.name}'s eyes and it starts to stumble around.",
+            f"You say a complicated mathematical term. Last braincells leave "
+            f"{target.name}'s eyes and it starts to stumble around.",
             color.status_effect_applied,
         )
         target.ai = components.ai.ConfusedEnemy(
-            entity=target, previous_ai=target.ai, turns_remaining=self.act_number_of_turns,
+            entity=target,
+            previous_ai=target.ai,
+            turns_remaining=self.act_number_of_turns,
         )
         self.consume()
 
 
+# This creates an area of effect consumable
 class StinkBombConsumable(Consumable):
     def __init__(self, damage: int, radius: int):
         self.damage = damage 
@@ -207,17 +236,21 @@ class StinkBombConsumable(Consumable):
         for actor in self.engine.game_map.actors:
             if actor.distance(*target_xy) <=self.radius:
                 self.engine.message_log.add_message(
-                    f"A Stink Cloud engulfs the {actor.name}, making it cough out its lungs for {self.act_damage} damge!"
+                    f"A Stink Cloud engulfs the {actor.name}, making it "
+                    f"cough out its lungs for {self.act_damage} damge!"
                 )
                 actor.fighter.take_damage(self.act_damage)
                 targets_hit = True
 
         if not targets_hit:
-            raise Impossible("No one is here to witness your Stink Bomb, so you decide to save it for later.")
+            raise Impossible("No one is here to witness your Stink Bomb, "
+                             "so you decide to save it for later.")
         self.consume()
 
+
+#####  This part was specifically modified by me  #####
+# This consumable is specifically the endgame event
 class Endgame(Consumable):
-  #  def __init__(self):
 
     def get_action(self, consumer: Actor) -> EndgameEventHandler:
         return EndgameEventHandler(self.engine)
@@ -225,19 +258,8 @@ class Endgame(Consumable):
 
     def activate(self, action: actions.ItemAction) -> EndgameEventHandler:
         self.engine.message_log.add_message(
-            "You pick up the note and write on it everything you and the Python talked about.", color.white
+            "You pick up the note and write on it everything "
+            "you and the Python talked about.",
+            color.white,
         )
         return EndgameEventHandler(self.engine)
-
-
-
-
-
-
-
-
-
-
-
-
-            

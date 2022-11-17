@@ -1,12 +1,17 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This has the classes of what one ac encounter in the dungeon
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-from __future__ import annotations
+####################
 
+from __future__ import annotations
 import copy
 import math
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
-
 from render_order import RenderOrder
 
 if TYPE_CHECKING:
@@ -21,8 +26,8 @@ if TYPE_CHECKING:
 
 T = TypeVar("T", bound="Entity")
 
+# This is a super class for the things that one can encounter 
 class Entity:
-
     parent: Union[GameMap, Inventory]
 
     def __init__(
@@ -60,7 +65,6 @@ class Entity:
         return clone
 
     def place(self, x:bint, y: int, gamemap: Optional[GameMap] = None) -> None:
-
         self.x = x
         self.y = y
         if gamemap:
@@ -74,12 +78,12 @@ class Entity:
         return math.sqrt((x- self.x)**2 + (y - self.y)**2)
 
     def move(self, dx: int, dy: int) -> None:
-
         self.x += dx
         self.y += dy
 
 
 class Actor(Entity):
+    #  This is specifically the class of the NPC's and the player
     def __init__(
         self,
         *,
@@ -122,7 +126,9 @@ class Actor(Entity):
     def is_alive(self) -> bool:
         return bool(self.ai)
 
+
 class Item(Entity):
+    #  This is the class pf objects that one can pick up in the dungeon
     def __init__(
         self,
         *,
@@ -152,16 +158,4 @@ class Item(Entity):
 
         if self.equippable:
             self.equippable.parent = self
-        
-        
-
-
-
-
-
-
-
-
-
-
         

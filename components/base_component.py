@@ -1,6 +1,12 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This creates a Base Component
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
+####################
 
 from __future__ import annotations
 

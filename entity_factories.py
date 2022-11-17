@@ -1,9 +1,15 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This is the library of all the possible entities
+# They are seperated by different types
+# Code adopted from TStand90 rogueliketutorials.com
 #
-##
-#
+####################
 
-from components.ai import HostileEnemy, SnakeEnemy, WormEnemy, ClosedDoor
+from components.ai import HostileEnemy, ClosedDoor
 from components import consumable, equippable
 from components.equipment import Equipment
 from components.fighter import Fighter
@@ -13,7 +19,6 @@ from entity import Actor, Item
 import random
 import tcod
 from input_handlers import EndgameEventHandler
-
 
 
 player = Actor(
@@ -27,14 +32,13 @@ player = Actor(
     level=Level(level_up_base=200),
 )
 
-############################################################## Monsters
+############################################################### Monsters
 
 big_evil_snake = Actor(
     char="S",
     color=(147,244,200),
     name="Big EVIL Snake",
-#    ai_cls=HostileEnemy,
-    ai_cls=SnakeEnemy,
+    ai_cls=HostileEnemy,
     equipment=Equipment(),
     fighter=Fighter(hp=16, base_armorclass=1, base_strength=3, base_magic=0),
     inventory=Inventory(capacity=0),
@@ -67,7 +71,6 @@ duck = Actor(
     char="2",
     color=(145, 131, 102)
     , name="Duck",
-    #ai_cls=WormEnemy,
     ai_cls=HostileEnemy,
     equipment=Equipment(),
     fighter=Fighter(hp=10, base_armorclass=0, base_strength=3, base_magic=0),
@@ -79,7 +82,6 @@ golden_duck = Actor(
     char="2",
     color=(219, 156, 26),
     name="Golden Duck",
-##    ai_cls=SnakeEnemy,
     ai_cls=HostileEnemy,
     equipment=Equipment(),
     fighter=Fighter(hp=20, base_armorclass=2, base_strength=5, base_magic=0),
@@ -142,6 +144,7 @@ renderfarm_animal = Actor(
     level=Level(xp_given=100),
 )
 
+# This is a special monster type that just represents a closed door
 door_strength = random.randint(5,50)
 closed_door = Actor(
     char="B",
@@ -149,12 +152,17 @@ closed_door = Actor(
     name="Closed Door",
     ai_cls=ClosedDoor,
     equipment=Equipment(),
-    fighter=Fighter(hp=door_strength, base_armorclass=0, base_strength=0, base_magic=0),
+    fighter=Fighter(
+        hp=door_strength,
+        base_armorclass=0,
+        base_strength=0,
+        base_magic=0,
+    ),
     inventory=Inventory(capacity=0),
     level=Level(xp_given=0),
 )
 
-############################################################## Healing
+################################################################ Healing
 
 energy_drink = Item(
     char="!",
@@ -184,7 +192,7 @@ nice_note = Item(
     consumable=consumable.HealingConsumable(amount=1)
 )
 
-############################################################## Spells
+################################################################# Spells
 
 deadline_list = Item(
     char="?",
@@ -221,7 +229,7 @@ stink_bomb = Item(
     consumable=consumable.StinkBombConsumable(damage=12, radius=3),
 )
 
-############################################################## Weapons
+################################################################ Weapons
 
 computer_mouse = Item(
     char="o",
@@ -266,7 +274,7 @@ nerf_blaster = Item(
 )
 
 
-############################################################## Armor
+################################################################## Armor
 
 face_mask = Item(
     char="{",
@@ -310,7 +318,7 @@ costume = Item(
     equippable=equippable.HalloweenCostume(),
 )
 
-############################################################## Ring
+################################################################### Ring
 
 the_one_ring = Item(
     char="=",
@@ -340,7 +348,7 @@ armorclass_mood_ring = Item(
     equippable=equippable.ArmorClassMoodRing(),
 )
 
-############################################################## Other
+################################################################## Other
 
 epilouge = Item(
     char="&",

@@ -54,7 +54,7 @@ class Ui_GalinaSnakeStrangelingEperimentSetup(object):
         font = QtGui.QFont()
         font.setFamily("Terminal")
         self.max_roomsize.setFont(font)
-        self.max_roomsize.setMinimum(5)
+        self.max_roomsize.setMinimum(10)
         self.max_roomsize.setMaximum(30)
         self.max_roomsize.setSingleStep(1)
         self.max_roomsize.setProperty("value", 15)
@@ -66,7 +66,7 @@ class Ui_GalinaSnakeStrangelingEperimentSetup(object):
         font.setFamily("Terminal")
         self.min_roomsize.setFont(font)
         self.min_roomsize.setMinimum(5)
-        self.min_roomsize.setMaximum(29)
+        self.min_roomsize.setMaximum(10)
         self.min_roomsize.setProperty("value", 5)
         self.min_roomsize.setObjectName("min_roomsize")
         

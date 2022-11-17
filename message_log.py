@@ -1,15 +1,20 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This manages the messages pop up
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from typing import Iterable, List, Reversible, Tuple
 import textwrap
-
 import tcod
-
 import color
 
+
+# This is a superclass that establishes an element of the message_log
 class Message:
     def __init__(self, text:str, fg: Tuple[int,int,int]):
         self.plain_text = text
@@ -22,12 +27,17 @@ class Message:
             return f"{self.plain_text} (x{self.count})"
         return self.plain_text
 
+
+# This stores all the messages that were displayed to the user
 class MessageLog:
     def __init__(self) -> None:
         self.messages: List[Message] = []
 
     def add_message(
-        self, text: str, fg: Tuple[int, int, int] = color.white, *, stack: bool = True,
+        self, text: str,
+        fg: Tuple[int, int, int] = color.white,
+        *,
+        stack: bool = True,
     ) -> None:
         if stack and self.messages and text == self.messages[-1].plain_text:
             self.messages[-1].count += 1
@@ -65,12 +75,3 @@ class MessageLog:
                 if y_offset <0:
                     return
     
-
-
-
-
-
-
-
-
-        

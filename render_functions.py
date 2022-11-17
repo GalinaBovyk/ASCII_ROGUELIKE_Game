@@ -1,12 +1,16 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This is a library of visual cues for the UI
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
 from typing import Tuple, TYPE_CHECKING
 import textwrap
-
 import tcod
 import color
 
@@ -28,18 +32,20 @@ def render_bar(
     console: Console, current_value: int, maximum_value: int, total_width: int
 ) -> None:
     bar_width = float(current_value/maximum_value)
-##    x = 0
-##    for i in range (0,maximum_value):
-##        console.draw_rect(x=x, y=50, width=1, height=1, ch=1, bg=color.black)
-##        x += 2
-##
     x = 0
 
     console.print(x=65, y=58, string="for help - (h)", fg=color.white)
 
     console.print(
-        x=1, y = 50, string=f"HP:{current_value}/{maximum_value}", fg=color.bar_text
+        x=1,
+        y = 50,
+        string=f"HP:{current_value}/{maximum_value}",
+        fg=color.bar_text,
     )
+
+    #####  This part was specifically modified by me  #####
+    #  Based on a procentage of health the heart is animated to represent
+    #  how well the player is doing
     
     if bar_width >= 0.75:
         console.print(x = 1,y= 51,string=" _--_ _--_ ",fg=color.bar_filled)
@@ -88,7 +94,6 @@ def render_bar(
         console.print(x = 1,y= 57,string="           ",fg=color.bar_empty)
         console.print(x = 1,y= 58,string="__-;-__;-;_",fg=color.bar_empty)
         
-    
 
 def render_dungeon_level(
     console: Console, dungeon_level: int, location: Tuple[int, int]
@@ -111,7 +116,8 @@ def render_names_at_mouse_location(
         console.print(x=x, y=y + y_offset , string=line)
         y_offset +=1
         
-
+# This creates the drawing of the Monty Python
+# It does not follow PEP8, because it is easier to see the image to edit
 def boss_print( console: Console ):
     console.print(x=1, y=1, string='''       ,)"""""")       )^^^^^)  /^^^^^/  \^"""""\   /^^^^^/              )""""""''', fg=color.white)
     console.print(x=1, y=2, string='''     /""""""";'       /^^^^^/  (^^^^^(    \^"""""`;^^^^^;              ,;"""""""''', fg=color.white)
@@ -137,6 +143,7 @@ def boss_print( console: Console ):
     console.print(x=1, y=22, string='''""""""""""""";                                                `~--,""""";/'.`~--''', fg=color.white)
     console.print(x=1, y=23, string='''""""""""""",/                                                      `~~'"        ''', fg=color.white)
     console.print(x=1, y=24, string='''"",;-,__--'                        _______                                      ''', fg=color.white)
+    #  This breaks up space so the consol can display the player
     console.print(x=41, y=25, string='''  \                                     ''', fg=color.white)
     console.print(x=41, y=26, string='''   \                                    ''', fg=color.white)
     console.print(x=41, y=27, string='''    |\                                  ''', fg=color.white)
@@ -147,17 +154,3 @@ def boss_print( console: Console ):
     console.print(x=1, y=27, string='''                               /|  ''', fg=color.white)
     console.print(x=1, y=28, string='''                              / |  ''', fg=color.white)
     console.print(x=1, y=29, string='''                                |  ''', fg=color.white)
-#    console.print(x=1, y=30, string='''......................................#.........................................''', fg=color.white)
-#    console.print(x=1, y=31, string='''......................................#.........................................''', fg=color.white)
-#    console.print(x=1, y=32, string='''......................................#.........................................''', fg=color.white)
-#    console.print(x=1, y=33, string='''......................................#.........................................''', fg=color.white)
-
-
-
-
-
-
-
-
-    #console.print(x=x, y =y, string=f"{names_at_mouse_location}")
-                                

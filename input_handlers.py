@@ -1,16 +1,19 @@
-###
+####################
+# 
+# Galina Bovykina
+# November 16 2022
+#
+# This is a library of reactions to player inputs.
+# Code adopted from TStand90 rogueliketutorials.com
+#
+####################
 
 from __future__ import annotations
 import os
-
 from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
-
 import tcod.event
-
-
 import actions
 from actions import Action, BumpAction, PickupAction, WaitAction
-
 import color
 import exceptions
 
@@ -18,7 +21,7 @@ if TYPE_CHECKING:
     from engine import Engine
     from entity import Item
 
-
+# These are dictionaries of key actions
 MOVE_KEYS = {
     tcod.event.K_UP: (0, -1),
     tcod.event.K_DOWN: (0, 1),
@@ -54,14 +57,15 @@ CONFIRM_KEYS = {
 }
 
 ActionOrHandler = Union[Action, "BaseEventHandler"]
-"""meep"""
+""" """
 
+# This determines what's an event & if can happen in the first place
 class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     def handle_events(self, event: tcod.event.Event) -> BaseEventhandler:
         state = self.dispatch(event)
         if isinstance(state, BaseEventHandler):
             return state
-        assert not isinstance(state, Action), F"{self!r} can not handle actions."
+        assert not isinstance(state, Action), f"{self!r} can not handle actions."
         return self
     def on_render(self, console: tcod.Console) -> None:
         raise NotImplementedError()
@@ -69,6 +73,8 @@ class BaseEventHandler(tcod.event.EventDispatch[ActionOrHandler]):
     def ev_quit(self, console: tcod.event.Quit) -> Optional[Action]:
         raise SystemExit
 
+
+# This is specifically for the main menue pop-ups
 class PopupMessage(BaseEventHandler):
     def __init__(self, parent_handler: BaseEventHandler, text: str):
         self.parent = parent_handler
@@ -92,13 +98,13 @@ class PopupMessage(BaseEventHandler):
         return self.parent
 
 
+# This is the basic class that handles events
 class EventHandler(BaseEventHandler):
 
     def __init__(self, engine: Engine):
         self.engine = engine
 
     def handle_events(self, event: tcod.event.Event) -> BaseEventHandler:
-#        self.handle_action(self.dispatch(event))
         action_or_state = self.dispatch(event)
         if isinstance(action_or_state, BaseEventHandler):
             return action_or_state
@@ -127,15 +133,12 @@ class EventHandler(BaseEventHandler):
         if self.engine.game_map.in_bounds(event.tile.x, event.tile.y):
             self.engine.mouse_location = event.tile.x, event.tile.y
 
-##    def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
-##        raise SystemExit()
-
     def on_render(self, console: tcod.Console) -> None:
         self.engine.render(console)
 
+# This event handler reacts to a player choosing somehting is a display
 class AskUserEventHandler(EventHandler):
-
-
+    
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         if event.sym in {
             tcod.event.K_LSHIFT,
@@ -148,6 +151,8 @@ class AskUserEventHandler(EventHandler):
             return None
         return self.on_exit()
 
+    #####  This part was specifically modified by me  #####
+    #  For convinience I switched the exit button to confirm keys
     def ev_mousebuttondown(
         self, event: tcod.event.KeyDown 
     ) -> Optional[ActionOrHandler]:
@@ -162,6 +167,8 @@ class AskUserEventHandler(EventHandler):
     def on_exit(self) -> Optional[ActionOrHandler]:
         return MainGameEventHandler(self.engine)
 
+
+# This shows the player the basic character stats display
 class CharacterScreenEventHandler(AskUserEventHandler):
     TITLE = "Things That are Neat about You"
 
@@ -172,11 +179,8 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x = 40
         else:
             x= 0
-
         y = 0
-
         width = len(self.TITLE) +4
-
         console.draw_frame(
             x=x,
             y=y,
@@ -191,27 +195,34 @@ class CharacterScreenEventHandler(AskUserEventHandler):
             x=x +1, y=y +2, string=f"{self.engine.player.name}"
         )
         console.print(
-            x=x +1, y=y +3, string=f"Level: {self.engine.player.level.current_level}"
+            x=x +1, y=y +3, string=f"Level: "
+            f"{self.engine.player.level.current_level}"
         )
         console.print(
-            x=x +1, y=y + 4, string=f"XP: {self.engine.player.level.current_xp}"
+            x=x +1, y=y + 4, string=f"XP: "
+            f"{self.engine.player.level.current_xp}"
         )
         console.print(
             x=x +1,
             y=y +5,
-            string=f"XP untill next Level: {self.engine.player.level.experience_to_next_level}",
+            string=f"XP untill next Level: "
+            f"{self.engine.player.level.experience_to_next_level}",
         )
         console.print(
-            x=x +1, y=y + 6, string=f"Strength Mod: +{self.engine.player.fighter.strength}"
+            x=x +1, y=y + 6, string=f"Strength Mod: "
+            f"+{self.engine.player.fighter.strength}"
         )
         console.print(
-            x=x +1, y=y +7, string=f"Armor Class: {self.engine.player.fighter.armorclass}"
+            x=x +1, y=y +7, string=f"Armor Class: "
+            f"{self.engine.player.fighter.armorclass}"
         )
         console.print(
-            x=x +1, y=y +8, string=f"Magic Mod: +{self.engine.player.fighter.magic}"
+            x=x +1, y=y +8, string=f"Magic Mod: "
+            f"+{self.engine.player.fighter.magic}"
         )
         
 
+# Thid handles the leveling up display
 class LevelUpEventHandler(AskUserEventHandler):
     TITLE = "Level Up"
 
@@ -233,34 +244,40 @@ class LevelUpEventHandler(AskUserEventHandler):
             bg=(0,0,0),
         )
 
-        console.print(x=x + 1, y=1, string="Quick Note: You leveled up!")
-        console.print(x=x + 1, y=2, string="Select an attribute to increase.")
+        console.print(x=x + 1, y=1, string="Quick Note:"
+                      "You leveled up!")
+        console.print(x=x + 1, y=2, string="Select an "
+                      "attribute to increase.")
 
         console.print(
             x=x  +1,
             y=4,
-            string=f"a) Health (+5 HP from {self.engine.player.fighter.max_hp})",
+            string=f"a) Health (+5 HP from "
+            f"{self.engine.player.fighter.max_hp})",
         )
 
         console.print(
             x=x  +1,
             y=5,
-            string=f"b) Strength (+1 from {self.engine.player.fighter.strength})",
+            string=f"b) Strength (+1 from "
+            f"{self.engine.player.fighter.strength})",
         )
 
         console.print(
             x=x  +1,
             y=6,
-            string=f"c) Armour Class (+1 from {self.engine.player.fighter.armorclass})",
+            string=f"c) Armour Class (+1 from "
+            f"{self.engine.player.fighter.armorclass})",
         )
 
         console.print(
             x=x  +1,
             y=7,
-            string=f"d) Magic Power (+1 from {self.engine.player.fighter.magic})",
+            string=f"d) Magic Power (+1 from "
+            f"{self.engine.player.fighter.magic})",
         )
 
-    def ev_keydown(self, event: tcod.event.keyDown) -> Optional[ActionOnHandler]:
+    def ev_keydown(self, event: tcod.event.keyDown) ->Optional[ActionOnHandler]:
         player = self.engine.player
         key = event.sym
         index = key - tcod.event.K_a
@@ -276,7 +293,6 @@ class LevelUpEventHandler(AskUserEventHandler):
                 player.level.increase_magic()
         else:
             self.engine.message_log.add_message("Invalid entry.", color.invalid)
-
             return None
         return super().ev_keydown(event)
 
@@ -286,7 +302,7 @@ class LevelUpEventHandler(AskUserEventHandler):
 
         return None
 
-
+# This handles the inventory
 class InventoryEventHandler(AskUserEventHandler):
     TITLE = "<missing title>"
 
@@ -319,24 +335,10 @@ class InventoryEventHandler(AskUserEventHandler):
         if number_of_items_in_inventory>0:
             for i, item in enumerate(self.engine.player.inventory.items):
                 item_key = chr(ord("a") + i)
-                #console.print(x+1, y+i+1, f"{item_key} - {item.name}")
 
                 is_equipped = self.engine.player.equipment.item_is_equipped(item)
 
                 item_string = f"({item_key}) {item.name}"
-##                healing = item.consumable.amount
-##                damage = item.consumable.damage
-##                
-##
-##                #hp_mod = item.consumable.amount
-##                
-##                if healing:
-##                    hp_mod = item.consumable.amount
-##                    item_string = f"{item_string} (+ {hp_mod}hp)"
-##                if damage:
-##                    item_string = f"{item_string} (spell)"
-##                
-##                    
 
                 if is_equipped:
                     item_string = f"{item_string} (wearing rn)"
@@ -355,7 +357,10 @@ class InventoryEventHandler(AskUserEventHandler):
                 selected_item = player.inventory.items[index]
                 
             except IndexError:
-                self.engine.message_log.add_message("Invalid entery/You dot have this item", color.invalid)
+                self.engine.message_log.add_message(
+                    "Invalid entery/You dot have this item",
+                    color.invalid,
+                )
                 return None
                 
             return self.on_item_selected(selected_item)
@@ -364,11 +369,13 @@ class InventoryEventHandler(AskUserEventHandler):
     def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
         raise NotImplementedError()
 
+
+# This is an extra subclass that specifically handles the items
+# differently, depending on the type of the Item
 class InventoryActivateHandler(InventoryEventHandler):
     TITLE = "What do you want to use?"
 
     def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
-        #return item.consumable.get_action(self.engine.player)
         if item.consumable:
             return item.consumable.get_action(self.engine.player)
         elif item.equippable:
@@ -376,14 +383,16 @@ class InventoryActivateHandler(InventoryEventHandler):
         else:
             return None
             
-    
 
+# This handles removing Items from inventory
 class InventoryDropHandler(InventoryEventHandler):
     TITLE = "What do you want to take out of your pockets?"
 
     def on_item_selected(self, item: Item) -> Optional[ActionOrHandler]:
         return actions.DropItem(self.engine.player, item)
 
+
+# This specifically handles inputs for scrolling
 class SelectIndexHandler(AskUserEventHandler):
     def __init__(self, engine: Engine):
         super().__init__(engine)
@@ -429,19 +438,28 @@ class SelectIndexHandler(AskUserEventHandler):
     def on_index_selected(self, x: int, y: int) -> Optional[AttackOrHandler]:
         raise NotImplementedError()
 
+
+# This lets the main game handler to become the main event handler again
 class LookHandler(SelectIndexHandler):
     def on_index_selected(self, x: int, y: int) -> MainGameEventHandler:
         self.engine.event_handler = MainGameEventHandler(self.engine)
 
+
+# This lets the user to choose a target
 class SingleRangedAttackHandler(SelectIndexHandler):
     def __init__(
-        self, engine: Engine, callback: Callable[[Tuple[int, int]], Optional[Action]]
+        self,
+        engine: Engine,
+        callback: Callable[[Tuple[int, int]],
+        Optional[Action]]
     ):
         super().__init__(engine)
         self.callback = callback
     def on_index_selected(self, x: int, y: int) -> Optional[Action]:
         return self.callback((x,y))
 
+
+# This selects all the entities in the user selected radius
 class AreaRangedAttackHandler(SelectIndexHandler):
     def __init__(
         self,
@@ -471,8 +489,8 @@ class AreaRangedAttackHandler(SelectIndexHandler):
         return self.callback((x,y))
             
 
+# This handles the main game events caused by user input
 class MainGameEventHandler(EventHandler):
-
 
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         action: Optional[Action] = None
@@ -509,9 +527,10 @@ class MainGameEventHandler(EventHandler):
             return LookHandler(self.engine)
         elif key == tcod.event.K_h:
             return HelpEventHandler(self.engine)
-
         return action
 
+
+# This handles the Game over event
 class GameOverEventHandler(EventHandler):
     def on_quit(self) -> None:
         if os.path.exists("savegame.sav"):
@@ -533,6 +552,8 @@ CURSOR_Y_KEYS = {
 
 }
 
+
+# This creates the message log history window
 class HistoryViewer(EventHandler):
 
     def __init__(self, engine: Engine):
@@ -548,7 +569,12 @@ class HistoryViewer(EventHandler):
         log_console.draw_frame(0,0, log_console.width, log_console.height)
 
         log_console.print_box(
-            0,0, log_console.width, 1,"Here is what you missed on the live broadcast", alignment=tcod.CENTER
+            0,
+            0,
+            log_console.width,
+            1,
+            "Here is what you missed on the live broadcast",
+            alignment=tcod.CENTER,
         )
 
         self.engine.message_log.render_messages(
@@ -573,8 +599,9 @@ class HistoryViewer(EventHandler):
             return None
         
 
-
-
+#####  This part was specifically modified by me  #####
+# All the next handlers were added in by me for a better user experience
+# They were based on and expanded from the HistoryEventHandler
 class HelpEventHandler(EventHandler):
 
     def __init__(self, engine: Engine):
@@ -588,9 +615,6 @@ class HelpEventHandler(EventHandler):
 
         help_console.draw_frame(0,0, help_console.width, help_console.height)
 
-       # help_console.print_box(
-            #0,0, help_console.width, 1,"Here is some helpful tips about controls:", alignment=tcod.CENTER
-        #)
         for i, text in enumerate(
             ["So you have some questions about how to play this game?",
              "Its actually not too complicated -",
@@ -641,7 +665,12 @@ class HelpEventHandler(EventHandler):
                 alignment=tcod.CENTER,
             )
         help_console.print_box(
-            0,0, help_console.width, 1,"Here is some helpful tips about controls:", alignment=tcod.CENTER
+            0,
+            0,
+            help_console.width,
+            1,
+            "Here is some helpful tips about controls:",
+            alignment=tcod.CENTER
         )
         
         help_console.blit(console, 3, 3)
@@ -725,12 +754,3 @@ class EndgameEventHandler(EventHandler):
             self, event: tcod.event.MouseButtonDown,
     ) -> Optional[ActionOrHandler]:
         return GameOverEventHandler(self.engine)
-
-        
-
-
-
-
-
-
-    

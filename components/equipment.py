@@ -1,12 +1,15 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This contains the equipment class
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 from __future__ import annotations
-
 from typing import Optional, TYPE_CHECKING
-
 from components.base_component import BaseComponent
 from equipment_types import EquipmentType
 
@@ -16,7 +19,11 @@ if TYPE_CHECKING:
 class Equipment(BaseComponent):
     paret: Actor
 
-    def __init__(self, weapon: Optional[Item] = None, armor: Optional[Item] = None, ring: Optional[Item] = None):
+    def __init__(
+        self, weapon: Optional[Item] = None,
+        armor: Optional[Item] = None,
+        ring: Optional[Item] = None,
+    ):
         self.weapon = weapon
         self.armor = armor
         self.ring = ring
@@ -49,6 +56,8 @@ class Equipment(BaseComponent):
             bonus += self.ring.equippable.strength_bonus
         return bonus
 
+    #####  This part was specifically modified by me  #####
+    #  Because I added magic as a seperate stat I also created this property
     @property
     def magic_bonus(self) -> int:
         bonus = 0
@@ -94,7 +103,11 @@ class Equipment(BaseComponent):
 
         setattr(self, slot, None)
 
-    def toggle_equip(self, equippable_item: Item, add_message: bool = True) -> None:
+    def toggle_equip(
+        self,
+        equippable_item: Item,
+        add_message: bool = True,
+    ) -> None:
         if(
             equippable_item.equippable
             and equippable_item.equippable.equipment_type == EquipmentType.WEAPON
@@ -115,15 +128,3 @@ class Equipment(BaseComponent):
         else:
             self.equip_to_slot(slot, equippable_item, add_message)
         
-    
-
-
-
-
-
-
-
-
-
-
-    

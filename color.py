@@ -1,7 +1,12 @@
+####################
+# 
+# Galina Bovykina
+# November 16 2022
 #
+# This is a color reference library
+# Code adopted from TStand90 rogueliketutorials.com
 #
-#
-#
+####################
 
 white = (0xFF,0xFF,0xFF)
 black = (0x0, 0x0, 0x0)
